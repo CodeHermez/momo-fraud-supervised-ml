@@ -1,0 +1,14 @@
+{
+  "rung": "no_origin_balance",
+  "R": 773.7010836478753,
+  "lambda": 0.0012908204481801523,
+  "band_cutoffs": {
+    "Medium": 0.012908204481801522,
+    "High": 0.12908204481801522,
+    "Critical": 1.2908204481801522
+  },
+  "best_ner": 0.13137587645252166,
+  "best_ner_learner": "xgboost",
+  "best_ner_rule": "youden",
+  "per_transaction_wins": true
+}

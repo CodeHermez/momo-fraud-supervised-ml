@@ -1,0 +1,26 @@
+{
+  "rung": "no_origin_balance",
+  "learner": "xgboost",
+  "top5_shap": [
+    "type_CASH_OUT",
+    "type_TRANSFER",
+    "destZeroAfter",
+    "oldbalanceDest",
+    "type_PAYMENT"
+  ],
+  "top5_permutation": [
+    "type_TRANSFER",
+    "newbalanceDest",
+    "amount",
+    "destZeroAfter",
+    "type_CASH_OUT"
+  ],
+  "top5_gain": [
+    "destZeroBefore",
+    "type_TRANSFER",
+    "destZeroAfter",
+    "type_CASH_OUT",
+    "hour"
+  ],
+  "amount_shap_rank": 6
+}

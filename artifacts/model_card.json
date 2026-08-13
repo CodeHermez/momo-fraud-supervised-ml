@@ -1,0 +1,60 @@
+{
+  "created_utc": "2026-08-08T10:38:40+00:00",
+  "task": "mobile money transaction fraud detection",
+  "learner": "xgboost",
+  "cost_sensitivity": "decision-level only (threshold); no class weighting or resampling",
+  "data": {
+    "dataset": "ealaxi/paysim1",
+    "csv_sha256": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+    "n_transactions": 6362620,
+    "prevalence": 0.001290820448180152,
+    "trained_on_rows": 5408226,
+    "feature_set": "no_origin_balance",
+    "features_excluded": [
+      "errorBalanceDest",
+      "errorBalanceOrig",
+      "newbalanceOrig",
+      "oldbalanceOrg",
+      "origZeroAfter",
+      "origZeroBefore"
+    ]
+  },
+  "decision": {
+    "severity_ratio_R": 773.7010836478753,
+    "interpretation": "missing one fraud is treated as bad as R false alarms",
+    "threshold": 0.0019162173848599195,
+    "selected_on": "validation split, using a train-only model"
+  },
+  "held_out_performance": {
+    "pr_auc": 0.817257678698113,
+    "roc_auc": 0.9851784403883104,
+    "precision": 0.05821261184490839,
+    "recall": 0.8871753246753247,
+    "f1": 0.1092562974810076,
+    "mcc": 0.224579138029712,
+    "brier": 0.00033685471755567106,
+    "ner": 0.13137587645252166,
+    "alert_rate": 0.0196732167218151
+  },
+  "recall_at_top_k_on_test_split": {
+    "100": 0.08116883116883117,
+    "500": 0.40584415584415584,
+    "1000": 0.7589285714285714,
+    "5000": 0.8474025974025974
+  },
+  "recall_at_alerts_per_day": {
+    "100": 0.37662337662337664,
+    "500": 0.8238636363636364,
+    "1000": 0.8449675324675324,
+    "5000": 0.8920454545454546
+  },
+  "budget_note": "The test split holds 15.0% of traffic over 31.0 days. 'alerts_per_day' figures are scaled accordingly; 'top_k' figures are raw counts on the split. Do not read one as the other.",
+  "limitations": [
+    "Trained on PaySim, a synthetic simulator, not real mobile money traffic.",
+    "PaySim's fraud is largely recoverable by a three-clause boolean rule (precision 0.9999, recall 0.9770), so results on the full feature set measure the simulator rather than fraud.",
+    "This model deliberately excludes origin-balance features for that reason; it is trained on the 'no_origin_balance' feature set.",
+    "ROC-AUC is reported for comparability only. At 0.129% prevalence it is near-insensitive to false positives and should not be used to rank models.",
+    "Thresholds assume calibrated probabilities. Recalibrate before deploying against traffic whose prevalence differs from 0.129%.",
+    "No fairness or demographic evaluation was performed; PaySim carries no demographic attributes."
+  ]
+}

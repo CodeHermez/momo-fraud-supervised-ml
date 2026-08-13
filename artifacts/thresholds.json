@@ -1,0 +1,33 @@
+{
+  "decision_threshold": 0.0019162173848599195,
+  "severity_ratio_R": 773.7010836478753,
+  "bayes_threshold": 0.0012908204481801523,
+  "band_cutoffs": {
+    "Medium": 0.012908204481801522,
+    "High": 0.12908204481801522,
+    "Critical": 1.2908204481801522
+  },
+  "band_actions": {
+    "Low": "allow",
+    "Medium": "monitor",
+    "High": "step_up_auth",
+    "Critical": "block"
+  },
+  "feature_names": [
+    "amount",
+    "log_amount",
+    "oldbalanceDest",
+    "newbalanceDest",
+    "hour",
+    "day",
+    "destZeroBefore",
+    "destZeroAfter",
+    "highRiskFlag",
+    "type_CASH_IN",
+    "type_CASH_OUT",
+    "type_DEBIT",
+    "type_PAYMENT",
+    "type_TRANSFER"
+  ],
+  "feature_set": "no_origin_balance"
+}
