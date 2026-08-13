@@ -8,7 +8,6 @@
 # 1.4 MB and it is what the prototype loads. `predictions/` is the 210 MB
 # probability cache that notebook 06 sweeps over - regenerate it by re-running
 # notebooks 03-05.
-/models
 /predictions
 
 # Environment
