@@ -1,0 +1,13 @@
+learner,variant,delta_pr_auc,verdict
+logistic_regression,weighted,-0.3552624500423546,WORSE than unweighted
+logistic_regression,instance_weighted,-0.26467567186641205,WORSE than unweighted
+logistic_regression,rus,-0.3863535226465625,WORSE than unweighted
+decision_tree,weighted,-0.01841602851338653,indistinguishable
+decision_tree,instance_weighted,-0.014379163741870205,indistinguishable
+decision_tree,rus,-0.536197717037146,WORSE than unweighted
+random_forest,weighted,-0.05000627020482762,WORSE than unweighted
+random_forest,instance_weighted,-0.04199595851023874,WORSE than unweighted
+random_forest,rus,-0.06768545248316671,WORSE than unweighted
+xgboost,weighted,-0.019508435418210568,indistinguishable
+xgboost,instance_weighted,-0.019065621588559067,indistinguishable
+xgboost,rus,-0.0755900504651722,WORSE than unweighted

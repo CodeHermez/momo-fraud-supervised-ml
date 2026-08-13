@@ -1,0 +1,13 @@
+feature_set,learner,observed_pr_auc,thar_wai_pr_auc,difference,comparable,verdict,passes
+full,logistic_regression,0.8160173160210131,0.712,0.10401731602101316,True,above published (expected: richer features),True
+full,random_forest,0.9962617369407095,0.8905,0.10576173694070956,True,SUSPICIOUSLY HIGH - investigate for leakage,False
+full,xgboost,0.9976538559094231,0.916,0.08165385590942309,True,SUSPICIOUSLY HIGH - investigate for leakage,False
+no_error_features,logistic_regression,0.7671946124756107,0.712,0.05519461247561075,True,above published (expected: richer features),True
+no_error_features,random_forest,0.9148527645492422,0.8905,0.02435276454924229,True,above published (expected: richer features),True
+no_error_features,xgboost,0.967568639399133,0.916,0.05156863939913292,True,above published (expected: richer features),True
+no_origin_balance,logistic_regression,0.5039687570139619,0.712,-0.20803124298603803,False,not comparable (features deliberately removed),True
+no_origin_balance,random_forest,0.7967497221433496,0.8905,-0.09375027785665035,False,not comparable (features deliberately removed),True
+no_origin_balance,xgboost,0.817257678698113,0.916,-0.09874232130188698,False,not comparable (features deliberately removed),True
+transaction_only,logistic_regression,0.0783788521397837,0.712,-0.6336211478602163,False,not comparable (features deliberately removed),True
+transaction_only,random_forest,0.5082481523131688,0.8905,-0.3822518476868312,False,not comparable (features deliberately removed),True
+transaction_only,xgboost,0.5696852031609388,0.916,-0.3463147968390612,False,not comparable (features deliberately removed),True

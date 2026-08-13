@@ -1,0 +1,5 @@
+feature_set,best_ner
+full,0.004058441558441558
+no_error_features,0.009417342807667428
+no_origin_balance,0.13137587645252166
+transaction_only,0.19307008955696867

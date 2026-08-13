@@ -1,0 +1,16 @@
+{
+  "experimental_rung": "no_origin_balance",
+  "best_ner_at_rung": 0.13137587645252166,
+  "headroom_floor": 0.05,
+  "rationale": "least-ablated rung with NER >= 0.05",
+  "features_dropped": [
+    "errorBalanceDest",
+    "errorBalanceOrig",
+    "newbalanceOrig",
+    "oldbalanceOrg",
+    "origZeroAfter",
+    "origZeroBefore"
+  ],
+  "rule_precision": 0.9998753894080997,
+  "rule_recall": 0.9769877024229879
+}

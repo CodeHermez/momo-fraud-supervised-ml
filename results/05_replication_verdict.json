@@ -1,0 +1,9 @@
+{
+  "lokanan_balanced_n": 1187716,
+  "our_balanced_n": 397779,
+  "arm_a_test_prevalence": 0.5019168887324652,
+  "arm_b_test_prevalence": 0.001290847074783128,
+  "mean_precision_arm_a": 0.9888116310472594,
+  "mean_precision_arm_b": 0.1937388342319522,
+  "mean_precision_arm_c": 0.1857876486667426
+}
