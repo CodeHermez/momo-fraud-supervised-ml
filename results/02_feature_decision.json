@@ -1,0 +1,19 @@
+{
+  "dropped_as_leakage": [
+    "isFlaggedFraud"
+  ],
+  "dropped_as_identifiers": [
+    "nameOrig",
+    "nameDest"
+  ],
+  "flagged_as_artifacts": [
+    "errorBalanceOrig"
+  ],
+  "ablation_removes": [
+    "errorBalanceOrig",
+    "errorBalanceDest"
+  ],
+  "n_features_full": 20,
+  "n_features_ablated": 18,
+  "high_risk_cutoff": 1619410.625
+}

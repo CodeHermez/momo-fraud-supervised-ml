@@ -1,0 +1,7 @@
+{
+  "n_flagged": 16,
+  "n_flagged_and_fraud": 16,
+  "precision_against_label": 1.0,
+  "recall_against_label": 0.0019481310118105442,
+  "share_of_dataset": 2.51468734577894e-06
+}

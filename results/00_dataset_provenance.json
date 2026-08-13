@@ -1,0 +1,11 @@
+{
+  "dataset": "ealaxi/paysim1",
+  "csv_sha256": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+  "n_transactions": 6362620,
+  "n_fraud": 8213,
+  "n_legitimate": 6354407,
+  "prevalence": 0.001290820448180152,
+  "imbalance_ratio": 773.7010836478753,
+  "n_steps": 743,
+  "n_days": 30.958333333333332
+}
