@@ -1,0 +1,20 @@
+# Pinned so experimental results stay reproducible.
+# Verified to resolve on Python 3.14 (shap ships a cp312-abi3 wheel).
+numpy==2.4.4
+pandas==3.0.2
+pyarrow==24.0.0
+scikit-learn==1.8.0
+xgboost==3.4.0
+imbalanced-learn==0.14.2
+shap==0.52.0
+matplotlib==3.10.9
+seaborn==0.13.2
+scipy==1.16.3
+joblib==1.5.2
+jupyterlab==4.6.2
+ipykernel==7.2.0
+pytest==9.0.1
+
+# Dataset acquisition (notebook 00). Requires ~/.kaggle/kaggle.json;
+# the notebook falls back to manual download if credentials are absent.
+kaggle==1.7.4.5
