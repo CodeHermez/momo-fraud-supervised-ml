@@ -11,9 +11,9 @@ Following Johnson & Khoshgoftaar (2022) the false-positive cost is fixed at
 ``C(1,0) = 1`` and only ``C(0,1) = R`` varies. All three cost-sensitive levels in
 the proposal's section 3.3 taxonomy then fall out of that single parameter:
 
-    data level       undersample to  N'_neg = N_neg / R
-    algorithm level  scale_pos_weight = R
-    decision level   threshold lambda = 1 / (1 + R)
+    data level:      undersample to N'_neg = N_neg / R
+    algorithm level: scale_pos_weight = R
+    decision level:  threshold lambda = 1 / (1 + R)
 
 **Decision rule.** A transaction is flagged when ``score >= threshold``. The
 ``>=`` (rather than ``>``) matters only on exact ties, but fixing it makes the
