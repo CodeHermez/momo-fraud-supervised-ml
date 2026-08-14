@@ -29,6 +29,7 @@ MODEL_FILE = "model.json"
 PREPROCESSOR_FILE = "preprocessor.json"
 THRESHOLDS_FILE = "thresholds.json"
 MODEL_CARD_FILE = "model_card.json"
+JOBLIB_FILE = "model.joblib"
 
 
 @dataclass
@@ -77,8 +78,41 @@ class FraudScorer:
         return cls(model=model, builder=builder, thresholds=thresholds,
                    feature_names=thresholds["feature_names"], explainer=explainer)
 
-    def save(self, directory: str | Path, *, model_card: dict | None = None) -> Path:
-        """Freeze everything the prototype needs into one directory."""
+    @classmethod
+    def load_joblib(cls, path: str | Path) -> FraudScorer:
+        """Load the single-file variant written by ``save(..., joblib=True)``.
+
+        Requires ``momo_fraud`` to be importable -- the pickle references this
+        module's classes by name. That is the reason the JSON bundle, not this
+        file, is the source of truth.
+        """
+        import joblib
+
+        scorer = joblib.load(Path(path))
+        if not isinstance(scorer, cls):
+            raise TypeError(
+                f"{path} contains {type(scorer).__name__}, not a FraudScorer."
+            )
+        return scorer
+
+    def save(
+        self,
+        directory: str | Path,
+        *,
+        model_card: dict | None = None,
+        joblib: bool = False,
+    ) -> Path:
+        """Freeze everything the prototype needs into one directory.
+
+        The four JSON files are the canonical bundle: inspectable, diffable, and
+        stable across library versions. ``joblib=True`` additionally writes a
+        pickled ``FraudScorer`` for serving templates that expect one object.
+
+        The pickle is a *convenience copy*, never the source of truth. It embeds
+        the installed xgboost and numpy versions, so it can stop loading after an
+        upgrade that ``model.json`` survives untouched. Regenerate it from the
+        JSON rather than the other way round.
+        """
         directory = Path(directory)
         directory.mkdir(parents=True, exist_ok=True)
 
@@ -93,7 +127,30 @@ class FraudScorer:
             (directory / MODEL_CARD_FILE).write_text(
                 json.dumps(model_card, indent=2), encoding="utf-8"
             )
+        if joblib:
+            self.save_joblib(directory / JOBLIB_FILE)
         return directory
+
+    def save_joblib(self, path: str | Path) -> Path:
+        """Write the pickled single-file variant.
+
+        The SHAP explainer is dropped before pickling: it holds a reference to
+        the booster and roughly doubles the file for something ``load`` rebuilds
+        in milliseconds.
+        """
+        import joblib as _joblib
+
+        path = Path(path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        portable = FraudScorer(
+            model=self.model,
+            builder=self.builder,
+            thresholds=self.thresholds,
+            feature_names=self.feature_names,
+            explainer=None,
+        )
+        _joblib.dump(portable, path, compress=3)
+        return path
 
     # --- scoring ------------------------------------------------------------
 
@@ -195,3 +252,66 @@ def build_thresholds(
         "feature_names": list(feature_names),
         "feature_set": rung,
     }
+
+
+def _main(argv: list[str] | None = None) -> int:
+    """``python -m momo_fraud.predict --joblib`` -- derive the pickle from the bundle.
+
+    Deliberately reads the JSON bundle and refits nothing, so the pickle can
+    never disagree with the canonical artifacts. Regenerate it after any export.
+    """
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        prog="python -m momo_fraud.predict",
+        description="Inspect or re-export a frozen scoring bundle.",
+    )
+    parser.add_argument("--artifacts", default="artifacts",
+                        help="bundle directory (default: artifacts)")
+    parser.add_argument("--joblib", action="store_true",
+                        help=f"also write {JOBLIB_FILE} for serving templates "
+                             "that expect a single pickled object")
+    parser.add_argument("--out", default=None,
+                        help=f"where to write the pickle (default: <artifacts>/{JOBLIB_FILE})")
+    args = parser.parse_args(argv)
+
+    directory = Path(args.artifacts)
+    if not (directory / MODEL_FILE).exists():
+        parser.error(f"no bundle at {directory}/ -- run notebooks/08_model_export.ipynb first")
+
+    scorer = FraudScorer.load(directory, with_explainer=False)
+    print(f"loaded  {directory}/  "
+          f"({len(scorer.feature_names)} features, "
+          f"rung {scorer.thresholds['feature_set']}, "
+          f"threshold {scorer.thresholds['decision_threshold']:.6f})")
+
+    if not args.joblib:
+        print("\nnothing to do -- pass --joblib to write the pickled variant")
+        return 0
+
+    path = Path(args.out) if args.out else directory / JOBLIB_FILE
+    scorer.save_joblib(path)
+
+    # Round-trip before claiming success: a pickle that does not reload is worse
+    # than no pickle, because it fails in the prototype rather than here.
+    reloaded = FraudScorer.load_joblib(path)
+    probe = {"step": 212, "type": "TRANSFER", "amount": 181.0,
+             "oldbalanceOrg": 181.0, "newbalanceOrig": 0.0,
+             "oldbalanceDest": 0.0, "newbalanceDest": 0.0}
+    a = scorer.score(probe, explain=False)["probability"]
+    b = reloaded.score(probe, explain=False)["probability"]
+    if abs(a - b) > 1e-9:
+        print(f"FAILED round-trip: {a} vs {b}")
+        return 1
+
+    size_mb = path.stat().st_size / 1e6
+    print(f"wrote   {path}  ({size_mb:.2f} MB, round-trip verified)")
+    print(f"\n    from momo_fraud.predict import FraudScorer\n"
+          f"    scorer = FraudScorer.load_joblib({str(path)!r})")
+    print("\nThe JSON bundle remains the source of truth; this pickle is a "
+          "convenience copy and is tied to the installed xgboost/numpy versions.")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(_main())

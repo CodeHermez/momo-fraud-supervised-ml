@@ -10,6 +10,14 @@
 # notebooks 03-05.
 /predictions
 
+# Third-party skills installed by `npx skills add`. The academic-researcher
+# skill under .claude/skills/ is ours and IS tracked - it encodes this study's
+# reporting rules, so it belongs with the study.
+/.agents
+/.claude
+/skills-lock.json
+/.claude/skills/persona-researcher
+
 # Environment
 .venv/
 __pycache__/

@@ -39,8 +39,12 @@ Once the simulator's origin-balance bookkeeping is removed, transaction **type**
 ```bash
 python -m venv .venv
 .venv/Scripts/python -m pip install -r requirements.txt
+.venv/Scripts/python -m pip install -e .          # so `import momo_fraud` works outside notebooks/
 .venv/Scripts/python -m pytest tests/ -q
 ```
+
+The editable install is what lets a prototype elsewhere on the machine load the
+model. Without it only the notebooks work, because they patch `sys.path`.
 
 Then run `notebooks/00_data_acquisition.ipynb`, which downloads `ealaxi/paysim1` (needs `~/.kaggle/kaggle.json`, or download it manually — the notebook prints instructions either way).
 

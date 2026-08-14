@@ -49,6 +49,48 @@ def test_reloaded_bundle_reproduces_scores_exactly(scorer):
     np.testing.assert_allclose(before, after, rtol=1e-6)
 
 
+def test_joblib_variant_scores_identically_to_the_json_bundle(scorer, tmp_path):
+    """The pickle is a convenience copy; it must not be a different model."""
+    original, restored, df = scorer
+
+    path = original.save_joblib(tmp_path / "model.joblib")
+    assert path.exists()
+
+    from_pickle = FraudScorer.load_joblib(path)
+    sample = df.head(500)
+
+    np.testing.assert_allclose(
+        restored.score_batch(sample)["probability"].to_numpy(),
+        from_pickle.score_batch(sample)["probability"].to_numpy(),
+        rtol=1e-6,
+    )
+    # The frozen decision configuration has to survive too -- a pickle that
+    # scores the same but carries a different threshold flags different rows.
+    assert from_pickle.thresholds == restored.thresholds
+    assert from_pickle.feature_names == restored.feature_names
+
+
+def test_joblib_is_written_only_when_asked(scorer, tmp_path):
+    original, _, _ = scorer
+
+    original.save(tmp_path / "plain")
+    assert not (tmp_path / "plain" / "model.joblib").exists()
+
+    original.save(tmp_path / "with_pickle", joblib=True)
+    assert (tmp_path / "with_pickle" / "model.joblib").exists()
+
+
+def test_load_joblib_rejects_a_pickle_of_something_else(tmp_path):
+    """Loading an arbitrary pickle should fail loudly, not half-work."""
+    import joblib
+
+    decoy = tmp_path / "decoy.joblib"
+    joblib.dump({"not": "a scorer"}, decoy)
+
+    with pytest.raises(TypeError, match="not a FraudScorer"):
+        FraudScorer.load_joblib(decoy)
+
+
 def test_single_and_batch_paths_agree(scorer):
     """The prototype's one-transaction call must match the batch pipeline."""
     _, restored, df = scorer
