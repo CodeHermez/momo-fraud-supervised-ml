@@ -1,0 +1,79 @@
+{
+  "experiment_id": "E4_prevalence_manipulation",
+  "verdict": "PASS",
+  "n_cells": 104,
+  "n_rows": 62504,
+  "n_replicates": 100,
+  "checks": [
+    {
+      "check": "all pre-declared prevalence levels present",
+      "status": "PASS",
+      "detail": "7 levels: ['natural', 'prev_0.2581pct', 'prev_1.2765pct', 'prev_10pct', 'prev_11.32pct', 'prev_1pct', 'prev_50pct']"
+    },
+    {
+      "check": "recall invariant across prevalence levels",
+      "status": "PASS",
+      "detail": "0 cells with a moving recall"
+    },
+    {
+      "check": "TP and FN invariant across prevalence levels",
+      "status": "PASS",
+      "detail": "0 TP / 0 FN violations"
+    },
+    {
+      "check": "all real positives retained at every level",
+      "status": "PASS",
+      "detail": "[np.int64(1232)] positives per evaluation"
+    },
+    {
+      "check": "natural level reproduces the stored E3 cell",
+      "status": "PASS",
+      "detail": "max |diff| PR-AUC 3.33e-16, NER 1.11e-16, precision 0.00e+00"
+    },
+    {
+      "check": "natural level is the no-op control",
+      "status": "PASS",
+      "detail": "retention = 1.0, 1 deterministic replicate"
+    },
+    {
+      "check": "achieved prevalence matches the target",
+      "status": "PASS",
+      "detail": "max |achieved - target| = 0.00e+00"
+    },
+    {
+      "check": "observed precision matches its closed form",
+      "status": "PASS",
+      "detail": "max |observed - expected| = 2.33e-03"
+    },
+    {
+      "check": "no retraining occurred",
+      "status": "PASS",
+      "detail": "cache-only; the script imports no model library"
+    },
+    {
+      "check": "threshold locked, never re-selected",
+      "status": "PASS",
+      "detail": "one threshold per cell across all levels"
+    },
+    {
+      "check": "R_eval fixed at the frozen default",
+      "status": "PASS",
+      "detail": "773.7011, 1 distinct value"
+    },
+    {
+      "check": "only designated conditions present",
+      "status": "PASS",
+      "detail": "['unweighted', 'weighted']"
+    },
+    {
+      "check": "every designated cell evaluated",
+      "status": "PASS",
+      "detail": "104 cells, 0 skipped"
+    },
+    {
+      "check": "cell coverage recorded",
+      "status": "PASS",
+      "detail": "104 cells evaluated, 0 skipped (no cached predictions)"
+    }
+  ]
+}

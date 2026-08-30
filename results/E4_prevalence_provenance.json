@@ -1,0 +1,32 @@
+{
+  "experiment_id": "E4_prevalence_manipulation",
+  "status": "COMPLETE",
+  "frozen_baseline": "b2e6f624",
+  "timestamp_utc": "2026-08-30T11:05:44.443927+00:00",
+  "design": {
+    "manipulation": "test-set negatives subsampled without replacement",
+    "positives": "all real positives retained; none synthesised",
+    "model": "frozen per cell; no refitting at any level",
+    "threshold": "E3 validation-selected, locked across all levels",
+    "R_eval": 773.7010836478753,
+    "prevalence_grid": [
+      "natural",
+      "prev_0.2581pct",
+      "prev_1pct",
+      "prev_1.2765pct",
+      "prev_10pct",
+      "prev_11.32pct",
+      "prev_50pct"
+    ],
+    "grid_rationale": "union of both readings of the pre-declared {50%, 10%, 1%, 0.129%}: target prevalence and negative retention fraction",
+    "n_replicates": 100,
+    "nested_subsamples": true
+  },
+  "python_version": "3.14.4",
+  "numpy_version": "2.4.4",
+  "pandas_version": "3.0.2",
+  "source_root": "C:\\Users\\siphe\\source\\repos\\CodeHermez\\momo-fraud-supervised-ml",
+  "n_rows": 62504,
+  "git_sha": "91ea1567d2e16ac1575270b8531ecb3c69c89ab8",
+  "git_dirty": true
+}
