@@ -1,0 +1,456 @@
+{
+  "generated_by": "scripts/repairs/repair_10_provenance.py",
+  "environment": "results/experiment_environment.json",
+  "change_log": "results/methodology_change_log.json",
+  "status_legend": {
+    "VALID": "survives the audit; safe to cite",
+    "SUPERSEDED": "retained as a record; cite the replacement instead",
+    "DIAGNOSTIC": "informs a future research decision; not a study result"
+  },
+  "artifacts": [
+    {
+      "artifact": "00_dataset_provenance",
+      "produced_by": "notebooks/00_data_acquisition.ipynb",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "01_fraud_by_type",
+      "produced_by": "notebooks/01_eda.ipynb",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "01_amount_summary",
+      "produced_by": "notebooks/01_eda.ipynb",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "01_hourly_profile",
+      "produced_by": "notebooks/01_eda.ipynb",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "02_flagged_fraud_evidence",
+      "produced_by": "notebooks/02_leakage_audit.ipynb",
+      "status": "VALID",
+      "note": "descriptive; n_flagged = 16",
+      "present": true
+    },
+    {
+      "artifact": "02_drain_signature",
+      "produced_by": "notebooks/02_leakage_audit.ipynb",
+      "status": "VALID",
+      "note": "descriptive property of the generator, computed on all rows",
+      "present": true
+    },
+    {
+      "artifact": "02_zero_balance_rates",
+      "produced_by": "notebooks/02_leakage_audit.ipynb",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "02_rule_recoverability",
+      "produced_by": "notebooks/02_leakage_audit.ipynb",
+      "status": "VALID",
+      "note": "in-sample descriptive statistic; not a held-out detector result",
+      "present": true
+    },
+    {
+      "artifact": "02_single_feature_auc",
+      "produced_by": "notebooks/02_leakage_audit.ipynb",
+      "status": "VALID",
+      "note": "computed on all rows including test; see 09_destination_single_feature_auc for the training-rows-only version",
+      "present": true
+    },
+    {
+      "artifact": "02_account_overlap",
+      "produced_by": "notebooks/02_leakage_audit.ipynb",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "02_feature_decision",
+      "produced_by": "notebooks/02_leakage_audit.ipynb",
+      "status": "VALID",
+      "note": "declares a 2-feature ablation; the study ran a 6-feature one - see CHANGE-01",
+      "present": true
+    },
+    {
+      "artifact": "03_baselines_all_rungs",
+      "produced_by": "notebooks/03_baselines.ipynb",
+      "status": "VALID",
+      "note": "carries both val and test rows; the basis for the repaired rung decision",
+      "present": true
+    },
+    {
+      "artifact": "03_ladder_headroom",
+      "produced_by": "notebooks/03_baselines.ipynb",
+      "status": "SUPERSEDED",
+      "note": "test-selected; replaced by 03_ladder_headroom_v2",
+      "present": true
+    },
+    {
+      "artifact": "03_experimental_rung",
+      "produced_by": "notebooks/03_baselines.ipynb",
+      "status": "SUPERSEDED",
+      "note": "test-selected; replaced by 03_experimental_rung_v2 (same rung)",
+      "present": true
+    },
+    {
+      "artifact": "03_ladder_headroom_v2",
+      "produced_by": "scripts/repairs/repair_02_validation_selection.py",
+      "status": "VALID",
+      "note": "validation-selected",
+      "present": true
+    },
+    {
+      "artifact": "03_experimental_rung_v2",
+      "produced_by": "scripts/repairs/repair_02_validation_selection.py",
+      "status": "VALID",
+      "note": "validation-selected; outcome unchanged",
+      "present": true
+    },
+    {
+      "artifact": "03_benchmark_check",
+      "produced_by": "notebooks/03_baselines.ipynb",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "04_cost_sensitive",
+      "produced_by": "notebooks/04_cost_sensitive.ipynb",
+      "status": "VALID",
+      "note": "the main grid; metrics verified against raw predictions",
+      "present": true
+    },
+    {
+      "artifact": "04_h1_pr_auc_ci",
+      "produced_by": "notebooks/04_cost_sensitive.ipynb",
+      "status": "SUPERSEDED",
+      "note": "marginal CIs, n_boot=100; replaced by 04_h1_paired_bootstrap",
+      "present": true
+    },
+    {
+      "artifact": "04_h1_verdict",
+      "produced_by": "notebooks/04_cost_sensitive.ipynb",
+      "status": "SUPERSEDED",
+      "note": "CI-overlap verdicts; replaced by 04_h1_verdict_v2",
+      "present": true
+    },
+    {
+      "artifact": "04_h1_paired_bootstrap",
+      "produced_by": "scripts/repairs/repair_03_paired_bootstrap.py",
+      "status": "VALID",
+      "note": "paired stratified bootstrap, n_boot=2000",
+      "present": true
+    },
+    {
+      "artifact": "04_h1_verdict_v2",
+      "produced_by": "scripts/repairs/repair_03_paired_bootstrap.py",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "04_best_config_per_learner",
+      "produced_by": "notebooks/04_cost_sensitive.ipynb",
+      "status": "SUPERSEDED",
+      "note": "test-selected; replaced by 04_best_config_per_learner_v2",
+      "present": true
+    },
+    {
+      "artifact": "04_best_config_per_learner_v2",
+      "produced_by": "scripts/repairs/repair_02_validation_selection.py",
+      "status": "VALID",
+      "note": "validation-selected; differs for 3 of 4 learners",
+      "present": true
+    },
+    {
+      "artifact": "05_replication_arms",
+      "produced_by": "notebooks/05_lokanan_replication.ipynb",
+      "status": "VALID",
+      "note": "see 05_arm_interpretation for what the arms do and do not establish",
+      "present": true
+    },
+    {
+      "artifact": "05_precision_collapse",
+      "produced_by": "notebooks/05_lokanan_replication.ipynb",
+      "status": "VALID",
+      "note": "the A-to-B contrast does not isolate evaluation prevalence",
+      "present": true
+    },
+    {
+      "artifact": "05_replication_verdict",
+      "produced_by": "notebooks/05_lokanan_replication.ipynb",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "05_arm_interpretation",
+      "produced_by": "scripts/repairs (documentation)",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "05_builder_fit_repair",
+      "produced_by": "scripts/repairs/repair_07_notebook05_builder.py",
+      "status": "VALID",
+      "note": "shows the M7 leak was inert for the modelled columns",
+      "present": true
+    },
+    {
+      "artifact": "06_threshold_markers",
+      "produced_by": "notebooks/06_risk_analysis.ipynb",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "06_threshold_rule_comparison",
+      "produced_by": "notebooks/06_risk_analysis.ipynb",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "06_r_sweep",
+      "produced_by": "notebooks/06_risk_analysis.ipynb",
+      "status": "SUPERSEDED",
+      "note": "misleading name; replaced by 06_decision_cost_sweep (same NER values)",
+      "present": true
+    },
+    {
+      "artifact": "06_decision_cost_sweep",
+      "produced_by": "scripts/repairs/repair_04_06_relabel.py",
+      "status": "VALID",
+      "note": "decision-cost sweep at fixed R_train = 773.70",
+      "present": true
+    },
+    {
+      "artifact": "06_decision_cost_sweep_margins",
+      "produced_by": "scripts/repairs/repair_04_06_relabel.py",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "06_recall_at_budget",
+      "produced_by": "notebooks/06_risk_analysis.ipynb",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "06_risk_bands",
+      "produced_by": "notebooks/06_risk_analysis.ipynb",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "06_per_transaction_threshold",
+      "produced_by": "notebooks/06_risk_analysis.ipynb",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "06_risk_summary",
+      "produced_by": "notebooks/06_risk_analysis.ipynb",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "07_permutation_importance",
+      "produced_by": "notebooks/07_interpretability.ipynb",
+      "status": "VALID",
+      "note": "computed on test; distorted by amount/log_amount duplication and the mutually exclusive type_* one-hots",
+      "present": true
+    },
+    {
+      "artifact": "07_shap_importance",
+      "produced_by": "notebooks/07_interpretability.ipynb",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "07_gain_importance",
+      "produced_by": "notebooks/07_interpretability.ipynb",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "07_vs_published",
+      "produced_by": "notebooks/07_interpretability.ipynb",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "07_interpretability_summary",
+      "produced_by": "notebooks/07_interpretability.ipynb",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "07_learner_selection_v2",
+      "produced_by": "scripts/repairs/repair_02_validation_selection.py",
+      "status": "VALID",
+      "note": "validation-selected; unchanged at xgboost",
+      "present": true
+    },
+    {
+      "artifact": "09_velocity_vs_baseline",
+      "produced_by": "notebooks/09_velocity_features.ipynb",
+      "status": "SUPERSEDED",
+      "note": "temporal rows invalid (split realised 95.6/3.0/1.4); stratified rows remain valid and are carried into 09_temporal_repaired for comparison",
+      "present": true
+    },
+    {
+      "artifact": "09_temporal_repaired",
+      "produced_by": "scripts/repairs/repair_01_temporal_split.py",
+      "status": "VALID",
+      "note": "derived boundaries; three cost ratios reported",
+      "present": true
+    },
+    {
+      "artifact": "09_temporal_prevalence",
+      "produced_by": "scripts/repairs/repair_01_temporal_split.py",
+      "status": "VALID",
+      "note": "shows the class prior is non-stationary in simulated time",
+      "present": true
+    },
+    {
+      "artifact": "09_velocity_permutation_importance",
+      "produced_by": "notebooks/09_velocity_features.ipynb",
+      "status": "VALID",
+      "note": "stratified arm; same correlated-feature caveat as 07",
+      "present": true
+    },
+    {
+      "artifact": "09_destination_artefact_rates",
+      "produced_by": "scripts/repairs/repair_09_destination_diagnostic.py",
+      "status": "DIAGNOSTIC",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "09_destination_single_feature_auc",
+      "produced_by": "scripts/repairs/repair_09_destination_diagnostic.py",
+      "status": "DIAGNOSTIC",
+      "note": "training rows only",
+      "present": true
+    },
+    {
+      "artifact": "09_destination_ablation",
+      "produced_by": "scripts/repairs/repair_09_destination_diagnostic.py",
+      "status": "DIAGNOSTIC",
+      "note": "no_balance_state is not promoted to the main rung",
+      "present": true
+    },
+    {
+      "artifact": "10_xgboost_hpo_candidates",
+      "produced_by": "notebooks/10_advanced_optimization.ipynb",
+      "status": "VALID",
+      "note": "val PR-AUC is optimistically biased: the same val set served early stopping, candidate ranking and threshold selection",
+      "present": true
+    },
+    {
+      "artifact": "10_xgboost_hpo_winner",
+      "produced_by": "notebooks/10_advanced_optimization.ipynb",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "10_learner_comparison",
+      "produced_by": "notebooks/10_advanced_optimization.ipynb",
+      "status": "VALID",
+      "note": "contains the failed LightGBM run",
+      "present": true
+    },
+    {
+      "artifact": "10_stacking_results",
+      "produced_by": "notebooks/10_advanced_optimization.ipynb",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "10_multiseed_ner",
+      "produced_by": "notebooks/10_advanced_optimization.ipynb",
+      "status": "VALID",
+      "note": "4 seeds, unweighted config C only; LR and DT are deterministic so the effective seed sensitivity covers 2 learners; split held fixed",
+      "present": true
+    },
+    {
+      "artifact": "10_summary",
+      "produced_by": "notebooks/10_advanced_optimization.ipynb",
+      "status": "SUPERSEDED",
+      "note": "presented a failed run as a comparison; replaced by 10_summary_v2",
+      "present": true
+    },
+    {
+      "artifact": "10_summary_v2",
+      "produced_by": "scripts/repairs/repair_04_06_relabel.py",
+      "status": "VALID",
+      "note": null,
+      "present": true
+    },
+    {
+      "artifact": "10_failed_runs",
+      "produced_by": "scripts/repairs/repair_04_06_relabel.py",
+      "status": "VALID",
+      "note": "the LightGBM run, marked as failed rather than compared",
+      "present": true
+    },
+    {
+      "artifact": "frozen_experimental_baseline",
+      "produced_by": "scripts/freeze/",
+      "status": "VALID",
+      "note": "frozen baseline definition and its verification",
+      "present": true
+    },
+    {
+      "artifact": "frozen_baseline_checks",
+      "produced_by": "scripts/freeze/",
+      "status": "VALID",
+      "note": "frozen baseline definition and its verification",
+      "present": true
+    }
+  ],
+  "frozen_baseline": {
+    "status": "FROZEN",
+    "frozen_at_utc": "2026-08-27T14:48:15+00:00",
+    "manifest": "results/frozen_experimental_baseline.json",
+    "protocol": "docs/frozen_baseline_protocol.md",
+    "frozen_rung": "no_origin_balance",
+    "claim": "reduced simulator artefact exposure",
+    "diagnostic_rungs": [
+      "no_balance_state"
+    ],
+    "rationale": [
+      "origin-side simulator artefact evidence justified removal",
+      "destination-side diagnostic did not establish an equivalent deterministic artefact",
+      "validation-based selection still selects no_origin_balance",
+      "therefore no evidence-based reason to change the main rung"
+    ]
+  }
+}

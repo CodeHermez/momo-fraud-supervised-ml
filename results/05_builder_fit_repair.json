@@ -1,0 +1,39 @@
+{
+  "repair": "REPAIR 7 -- notebook 05 FeatureBuilder fitted on training rows only",
+  "audit_finding": "M7",
+  "modelled_columns": [
+    "amount",
+    "oldbalanceOrg",
+    "newbalanceOrig",
+    "oldbalanceDest",
+    "newbalanceDest",
+    "type_CASH_IN",
+    "type_CASH_OUT",
+    "type_DEBIT",
+    "type_PAYMENT",
+    "type_TRANSFER",
+    "day",
+    "hour"
+  ],
+  "modelled_matrix_identical": true,
+  "columns_that_differ": [],
+  "fitted_state": {
+    "high_risk_cutoff_fit_on_all": 1635335.0,
+    "high_risk_cutoff_fit_on_train": 1632845.25,
+    "cutoff_relative_difference": 0.0015224709310324796,
+    "severity_grid_identical": false
+  },
+  "columns_excluded_from_the_lokanan_feature_set": [
+    "destZeroAfter",
+    "destZeroBefore",
+    "errorBalanceDest",
+    "errorBalanceOrig",
+    "highRiskFlag",
+    "log_amount",
+    "origZeroAfter",
+    "origZeroBefore"
+  ],
+  "severity_used_in_notebook_05": false,
+  "conclusion": "The leak was real but inert: the builder's fitted state reaches only highRiskFlag and the severity grid, neither of which is in LOKANAN_RAW_FEATURES or passed to full_report in notebook 05. The model matrix is bit-identical either way, so no Arm A, B or C number changes and no rerun is required.",
+  "rerun_required": false
+}

@@ -1,0 +1,76 @@
+{
+  "experiment": "validation_based_selection_v2",
+  "recorded_utc": "2026-08-27T12:18:12+00:00",
+  "git": {
+    "commit": "b2e6f6243676544cb68b25aac83ba18d5eb139e5",
+    "branch": "experiment-suite",
+    "dirty": true
+  },
+  "environment": {
+    "python_version": "3.14.4",
+    "python_implementation": "CPython",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "numpy": "2.4.4",
+      "pandas": "3.0.2",
+      "pyarrow": "24.0.0",
+      "scikit-learn": "1.8.0",
+      "xgboost": "3.4.0",
+      "lightgbm": "4.7.0",
+      "imbalanced-learn": "0.14.2",
+      "shap": "0.52.0",
+      "scipy": "1.16.3",
+      "matplotlib": "3.10.9",
+      "seaborn": "0.13.2"
+    }
+  },
+  "dataset": {
+    "dataset": "ealaxi/paysim1",
+    "csv_sha256": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+    "n_transactions": 6362620,
+    "n_fraud": 8213,
+    "n_legitimate": 6354407,
+    "prevalence": 0.001290820448180152,
+    "imbalance_ratio": 773.7010836478753,
+    "n_steps": 743,
+    "n_days": 30.958333333333332
+  },
+  "seed": 42,
+  "split": {
+    "strategy": "stratified",
+    "train": 0.7,
+    "val": 0.15,
+    "test": 0.15,
+    "seed": 42
+  },
+  "model": {
+    "learners": [
+      "logistic_regression",
+      "decision_tree",
+      "random_forest",
+      "xgboost"
+    ]
+  },
+  "csl": {
+    "configs": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G"
+    ]
+  },
+  "cost_ratio": 773.7010836478753,
+  "thresholds": {
+    "rule": "ner_optimal",
+    "selected_on": "val"
+  },
+  "evaluation": {
+    "selection_split": "val",
+    "reporting_split": "test",
+    "criterion": "best NER >= 0.05, least-ablated viable rung"
+  },
+  "notes": "No refitting: re-reads 03_baselines_all_rungs.csv and 04_cost_sensitive.csv."
+}

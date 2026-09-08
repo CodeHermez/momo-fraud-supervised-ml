@@ -1,0 +1,20 @@
+{
+  "experimental_rung": "no_origin_balance",
+  "selected_on": "val",
+  "best_ner_at_rung_val": 0.1146545932099288,
+  "best_ner_at_rung_test": 0.1313758764525216,
+  "headroom_floor": 0.05,
+  "rationale": "least-ablated rung with best NER >= 0.05",
+  "features_dropped": [
+    "errorBalanceDest",
+    "errorBalanceOrig",
+    "newbalanceOrig",
+    "oldbalanceOrg",
+    "origZeroAfter",
+    "origZeroBefore"
+  ],
+  "supersedes": "03_experimental_rung.json (selected on test NER)",
+  "rung_if_selected_on_test": "no_origin_balance",
+  "selection_split_changes_the_rung": false,
+  "criterion_unchanged_from_original": true
+}

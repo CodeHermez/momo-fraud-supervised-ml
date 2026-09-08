@@ -1,0 +1,45 @@
+{
+  "repair": "REPAIR 7 -- what the notebook 05 arms do and do not establish",
+  "audit_finding": "M6",
+  "arms": {
+    "A": {
+      "purpose": "faithful replication of the published protocol's defect",
+      "protocol": "SMOTE-ENN over the whole subset, then split 60/40",
+      "test_set": "resampled: about 50 percent fraud, largely synthetic positives, ENN-cleaned",
+      "status": "VALID as a replication",
+      "supports": [
+        "that the published protocol produces about 0.99 precision",
+        "that a balanced test set larger than the stated training set is arithmetically implied by the reported numbers"
+      ]
+    },
+    "B": {
+      "purpose": "the Arm A models scored on real data at natural prevalence",
+      "protocol": "same fitted models, clean held-out rows never in the subset",
+      "test_set": "real, 0.129 percent fraud",
+      "status": "VALID as a demonstration that the Arm A numbers do not transfer"
+    },
+    "C": {
+      "purpose": "resampling applied correctly, to the training partition only",
+      "protocol": "split first, SMOTE-ENN the training partition, test untouched",
+      "test_set": "real, natural prevalence",
+      "status": "VALID as a correctly-executed protocol"
+    }
+  },
+  "what_the_A_to_B_contrast_does_NOT_isolate": [
+    "evaluation prevalence, on its own"
+  ],
+  "confounds_in_the_A_to_B_contrast": [
+    "base rate changes from about 50 percent to 0.129 percent",
+    "Arm A positives are largely synthetic SMOTE interpolations, not real transactions",
+    "ENN has removed borderline examples from both classes, making the Arm A test set easier",
+    "resample-then-split places points interpolated from training rows into the test set"
+  ],
+  "controlled_variables": {
+    "decision_threshold": 0.5,
+    "fitted_models": "identical between A and B"
+  },
+  "permitted_claim": "Precision measured on a resampled test set does not transfer to natural prevalence, so the published protocol's reported precision is not an estimate of deployed precision.",
+  "claim_NOT_supported": "That evaluation prevalence alone accounts for the collapse, or that any specific share of it is attributable to prevalence rather than to syntheticness, ENN cleaning, or train/test contamination.",
+  "experiment_that_would_settle_it": "An Arm D varying only the evaluation base rate: one fixed model, one fixed threshold, the same real positives throughout, with real negatives subsampled to 50, 10, 1 and 0.129 percent. No synthetic points, no ENN, no retraining. Deferred to the next research phase; not run here.",
+  "attribution_to_SMOTE_or_RUS": "Not made. The current design cannot separate the resampling method from the evaluation base rate."
+}

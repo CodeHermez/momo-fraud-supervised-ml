@@ -1,0 +1,79 @@
+{
+  "experiment": "06_decision_cost_sweep",
+  "recorded_utc": "2026-08-27T12:22:07+00:00",
+  "git": {
+    "commit": "b2e6f6243676544cb68b25aac83ba18d5eb139e5",
+    "branch": "experiment-suite",
+    "dirty": true
+  },
+  "environment": {
+    "python_version": "3.14.4",
+    "python_implementation": "CPython",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "numpy": "2.4.4",
+      "pandas": "3.0.2",
+      "pyarrow": "24.0.0",
+      "scikit-learn": "1.8.0",
+      "xgboost": "3.4.0",
+      "lightgbm": "4.7.0",
+      "imbalanced-learn": "0.14.2",
+      "shap": "0.52.0",
+      "scipy": "1.16.3",
+      "matplotlib": "3.10.9",
+      "seaborn": "0.13.2"
+    }
+  },
+  "dataset": {
+    "dataset": "ealaxi/paysim1",
+    "csv_sha256": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+    "n_transactions": 6362620,
+    "n_fraud": 8213,
+    "n_legitimate": 6354407,
+    "prevalence": 0.001290820448180152,
+    "imbalance_ratio": 773.7010836478753,
+    "n_steps": 743,
+    "n_days": 30.958333333333332
+  },
+  "seed": 42,
+  "split": {
+    "strategy": "stratified",
+    "seed": 42
+  },
+  "model": {
+    "source": "cached vectors from notebook 04; no refit"
+  },
+  "csl": {
+    "training_cost_ratio": 773.7010836478753,
+    "training_cost_ratio_varied": false,
+    "variants": [
+      "unweighted",
+      "weighted",
+      "instance_weighted",
+      "rus"
+    ]
+  },
+  "cost_ratio": {
+    "R_decision_swept": [
+      1.0,
+      10.0,
+      50.0,
+      100.0,
+      500.0,
+      773.7010836478753,
+      1000.0,
+      2000.0,
+      5000.0
+    ],
+    "R_train_fixed": 773.7010836478753
+  },
+  "thresholds": {
+    "rule": "ner_optimal",
+    "selected_on": "val",
+    "applied_to": "test"
+  },
+  "evaluation": {
+    "metric": "ner"
+  },
+  "notes": "Renames 06_r_sweep.csv. This is a decision-cost / threshold evaluation sweep, NOT a training-cost CSL sweep. A training-R sweep remains an open experiment (audit E2)."
+}

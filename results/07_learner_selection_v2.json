@@ -1,0 +1,8 @@
+{
+  "interpretability_learner": "xgboost",
+  "selected_on": "val",
+  "metric": "ner",
+  "learner_if_selected_on_test": "xgboost",
+  "selection_split_changes_learner": false,
+  "supersedes": "notebook 07 LEARNER constant ('lowest NER in notebook 04', test)"
+}

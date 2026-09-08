@@ -1,0 +1,101 @@
+{
+  "principle": "superseded artifacts are retained unchanged; regenerated ones are versioned and name what they supersede",
+  "narrative": "docs/methodology_change_log.md",
+  "changes": [
+    {
+      "id": "CHANGE-01",
+      "topic": "ablation deepened between notebooks 02 and 03",
+      "original": {
+        "artifact": "results/02_feature_decision.json",
+        "ablation_removes": [
+          "errorBalanceOrig",
+          "errorBalanceDest"
+        ],
+        "n_features_ablated": 18,
+        "equivalent_rung": "no_error_features"
+      },
+      "subsequent": {
+        "artifact": "results/03_experimental_rung.json",
+        "rung": "no_origin_balance",
+        "n_features": 14
+      },
+      "reason": "the solo-AUC screen cannot see a rule reconstructible from a combination of features; no_error_features leaves best NER 0.0094, so there is no headroom for a cost-sensitive comparison",
+      "chronology": "UNPROVEN",
+      "chronology_evidence": {
+        "notebook_02_first_commit": "c2ee031 2026-08-13T17:30:22+02:00",
+        "notebooks_03_04_05_first_commit": "ab1358c 2026-08-13T17:30:41+02:00",
+        "note": "03 and 04 entered version control in the same commit; no commit exists in which the rung decision is present and the CSL results are absent"
+      },
+      "preregistered": false,
+      "described_as": "criterion-driven and mechanically enforced, not pre-registered",
+      "experiments_affected": [
+        "04_cost_sensitive",
+        "04_h1_*",
+        "06_*",
+        "07_*",
+        "09_*",
+        "10_*"
+      ],
+      "status_after_repair": "rung recomputed on validation; outcome unchanged"
+    },
+    {
+      "id": "CHANGE-02",
+      "topic": "temporal boundaries derived rather than assumed",
+      "original": {
+        "train_end": 520,
+        "val_end": 632,
+        "realised_shares": [
+          0.9559,
+          0.03,
+          0.0141
+        ],
+        "test_prevalence": 0.0139
+      },
+      "subsequent": {
+        "train_end": 322,
+        "val_end": 377,
+        "realised_shares": [
+          0.6968,
+          0.153,
+          0.1502
+        ]
+      },
+      "reason": "boundaries assumed a uniform step distribution; PaySim is front-loaded",
+      "chronology": "repair phase, after the audit",
+      "experiments_affected": [
+        "09_velocity_vs_baseline (temporal rows)"
+      ],
+      "status_after_repair": "fixed; assertion and real-data test added"
+    },
+    {
+      "id": "CHANGE-03",
+      "topic": "selection moved from test to validation",
+      "decisions": [
+        "experimental rung",
+        "best config per learner",
+        "interpretability learner"
+      ],
+      "reason": "declared protocol selects on validation; implementation read test",
+      "outcome": {
+        "rung": "unchanged",
+        "interpretability_learner": "unchanged",
+        "best_config": "changed for 3 of 4 learners"
+      },
+      "status_after_repair": "fixed"
+    },
+    {
+      "id": "CHANGE-04",
+      "topic": "paired bootstrap replaces CI-overlap verdicts",
+      "reason": "overlap of marginal CIs does not imply absence of a difference",
+      "n_boot": 2000,
+      "status_after_repair": "fixed"
+    },
+    {
+      "id": "CHANGE-05",
+      "topic": "R-sweep relabelled as a decision-cost sweep",
+      "reason": "all CSL models trained at a single R_train = 773.70",
+      "ner_values_changed": false,
+      "status_after_repair": "documented; training-R sweep remains unrun"
+    }
+  ]
+}

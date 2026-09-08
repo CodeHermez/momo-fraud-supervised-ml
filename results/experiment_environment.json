@@ -1,0 +1,159 @@
+{
+  "experiment": "repository_environment_snapshot",
+  "recorded_utc": "2026-08-27T14:03:13+00:00",
+  "git": {
+    "commit": "b2e6f6243676544cb68b25aac83ba18d5eb139e5",
+    "branch": "experiment-suite",
+    "dirty": true
+  },
+  "environment": {
+    "python_version": "3.14.4",
+    "python_implementation": "CPython",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "numpy": "2.4.4",
+      "pandas": "3.0.2",
+      "pyarrow": "24.0.0",
+      "scikit-learn": "1.8.0",
+      "xgboost": "3.4.0",
+      "lightgbm": "4.7.0",
+      "imbalanced-learn": "0.14.2",
+      "shap": "0.52.0",
+      "scipy": "1.16.3",
+      "matplotlib": "3.10.9",
+      "seaborn": "0.13.2"
+    }
+  },
+  "dataset": {
+    "dataset": "ealaxi/paysim1",
+    "csv_sha256": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+    "n_transactions": 6362620,
+    "n_fraud": 8213,
+    "n_legitimate": 6354407,
+    "prevalence": 0.001290820448180152,
+    "imbalance_ratio": 773.7010836478753,
+    "n_steps": 743,
+    "n_days": 30.958333333333332
+  },
+  "seed": 42,
+  "split": {
+    "stratified": {
+      "strategy": "stratified",
+      "train": 0.7,
+      "val": 0.15,
+      "test": 0.15,
+      "seed": 42,
+      "stratified_on": "isFraud",
+      "implementation": "splits.stratified_split"
+    },
+    "temporal": {
+      "strategy": "temporal",
+      "train_end": 322,
+      "val_end": 377,
+      "tolerance": 0.03,
+      "derivation": "splits.derive_temporal_boundaries on the empirical cumulative row count",
+      "implementation": "splits.temporal_split"
+    }
+  },
+  "model": {
+    "learners": [
+      "logistic_regression",
+      "decision_tree",
+      "random_forest",
+      "xgboost"
+    ],
+    "hyperparameters": {
+      "logistic_regression": {
+        "pipeline": [
+          "scale",
+          "clf"
+        ],
+        "class_weight": null,
+        "max_iter": 1000,
+        "random_state": 42,
+        "solver": "lbfgs"
+      },
+      "decision_tree": {
+        "class_weight": null,
+        "criterion": "gini",
+        "max_depth": 8,
+        "min_samples_leaf": 50,
+        "random_state": 42
+      },
+      "random_forest": {
+        "class_weight": null,
+        "criterion": "gini",
+        "max_depth": 16,
+        "max_samples": 0.3,
+        "min_samples_leaf": 5,
+        "n_estimators": 100,
+        "random_state": 42
+      },
+      "xgboost": {
+        "colsample_bytree": 0.8,
+        "eval_metric": "aucpr",
+        "learning_rate": 0.1,
+        "max_depth": 6,
+        "n_estimators": 300,
+        "random_state": 42,
+        "scale_pos_weight": 1.0,
+        "subsample": 0.8,
+        "tree_method": "hist"
+      }
+    },
+    "selection_metric": "PR-AUC",
+    "note": "hyperparameters are fixed, not tuned, in notebooks 03-09"
+  },
+  "csl": {
+    "configs": {
+      "A": "baseline, t=0.5",
+      "B": "threshold from ROC (Youden)",
+      "C": "threshold minimising NER",
+      "D": "scale_pos_weight = R, t=0.5",
+      "E": "weighted + NER threshold",
+      "F": "per-instance sample_weight ~ severity",
+      "G": "RUS at N'_neg, natural test set"
+    },
+    "variants": [
+      "unweighted",
+      "weighted",
+      "instance_weighted",
+      "rus"
+    ],
+    "class_weight": "w+ = R, w- = 1",
+    "instance_weight": "w+_i = R * s_i, w- = 1 (see docs/config_f_cost_objectives.md)",
+    "rus_target": "N_neg / R"
+  },
+  "cost_ratio": {
+    "R_default": 773.7010836478753,
+    "derivation": "N_legit / N_fraud over the full dataset",
+    "R_sweep_decision_layer": [
+      1.0,
+      10.0,
+      50.0,
+      100.0,
+      500.0,
+      773.7010836478753,
+      1000.0,
+      2000.0,
+      5000.0
+    ]
+  },
+  "thresholds": {
+    "rule": "ner_optimal",
+    "selected_on": "val",
+    "applied_to": "test",
+    "note": "At R = N_neg/N_pos the NER-optimal and Youden thresholds coincide exactly; configs B and C are one condition at the default R."
+  },
+  "evaluation": {
+    "primary_metric": "ner",
+    "ranking_metric": "pr_auc",
+    "accuracy_reported": false,
+    "bootstrap": {
+      "paired": true,
+      "n_boot": 2000,
+      "stratified": true
+    }
+  },
+  "notes": "Provenance only; no result was modified. Fields that cannot be recovered from the repository are null rather than guessed."
+}

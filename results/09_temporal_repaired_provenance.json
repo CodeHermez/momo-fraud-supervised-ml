@@ -1,0 +1,98 @@
+{
+  "experiment": "09_temporal_repaired",
+  "recorded_utc": "2026-08-27T12:35:49+00:00",
+  "git": {
+    "commit": "b2e6f6243676544cb68b25aac83ba18d5eb139e5",
+    "branch": "experiment-suite",
+    "dirty": true
+  },
+  "environment": {
+    "python_version": "3.14.4",
+    "python_implementation": "CPython",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "numpy": "2.4.4",
+      "pandas": "3.0.2",
+      "pyarrow": "24.0.0",
+      "scikit-learn": "1.8.0",
+      "xgboost": "3.4.0",
+      "lightgbm": "4.7.0",
+      "imbalanced-learn": "0.14.2",
+      "shap": "0.52.0",
+      "scipy": "1.16.3",
+      "matplotlib": "3.10.9",
+      "seaborn": "0.13.2"
+    }
+  },
+  "dataset": {
+    "dataset": "ealaxi/paysim1",
+    "csv_sha256": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+    "n_transactions": 6362620,
+    "n_fraud": 8213,
+    "n_legitimate": 6354407,
+    "prevalence": 0.001290820448180152,
+    "imbalance_ratio": 773.7010836478753,
+    "n_steps": 743,
+    "n_days": 30.958333333333332
+  },
+  "seed": 42,
+  "split": {
+    "strategy": "temporal",
+    "train_end": 322,
+    "val_end": 377,
+    "derived_boundaries": [
+      322,
+      377
+    ],
+    "tolerance": 0.03,
+    "sizes": {
+      "train": 4433703,
+      "val": 973173,
+      "test": 955744
+    },
+    "prevalence": {
+      "train": 0.0008194053593576295,
+      "val": 0.0005857129205187567,
+      "test": 0.004195684199953125
+    },
+    "class_ratio": {
+      "train": 1219.3971924029727,
+      "val": 1706.321052631579,
+      "test": 237.34014962593517
+    }
+  },
+  "model": {
+    "learners": [
+      "logistic_regression",
+      "decision_tree",
+      "random_forest",
+      "xgboost"
+    ],
+    "variant": "unweighted",
+    "hyperparameters": "models.make_learner defaults"
+  },
+  "csl": {
+    "level": "decision only",
+    "method": "ner_optimal threshold"
+  },
+  "cost_ratio": {
+    "R_default": 773.7010836478753,
+    "R_train_ratio": 1219.3971924029727,
+    "R_test_ratio": 237.34014962593517
+  },
+  "thresholds": {
+    "rule": "ner_optimal",
+    "selected_on": "val",
+    "applied_to": "test"
+  },
+  "evaluation": {
+    "feature_sets": [
+      "no_velocity",
+      "velocity"
+    ],
+    "rung": "no_origin_balance",
+    "primary_metric": "ner",
+    "reported": "test only"
+  },
+  "notes": "Supersedes the temporal rows of 09_velocity_vs_baseline.csv, which used boundaries 520/632 realising 95.6/3.0/1.4."
+}
