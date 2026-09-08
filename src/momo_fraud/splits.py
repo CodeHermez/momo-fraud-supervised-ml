@@ -53,9 +53,35 @@ class Split:
         return {"train": len(self.train), "val": len(self.val), "test": len(self.test)}
 
     def prevalence(self, y: pd.Series | np.ndarray) -> dict[str, float]:
-        """Fraud rate per partition. Should track the population rate closely."""
+        """Fraud rate per partition.
+
+        Tracks the population rate closely under ``stratified_split`` -- by
+        construction. Under ``temporal_split`` it does not: PaySim's fraud
+        prevalence is non-stationary, so this is the number that tells a caller
+        whether the population cost ratio still applies.
+        """
         y = np.asarray(y)
         return {name: float(y[getattr(self, name)].mean()) for name in ("train", "val", "test")}
+
+    def class_ratio(self, y: pd.Series | np.ndarray) -> dict[str, float]:
+        """``N_neg / N_pos`` per partition -- the ratio at which NER is anchored.
+
+        ``normalized_expected_risk`` scores "flag nothing" at 1.0 for any ``R``,
+        but "flag everything" reaches 1.0 only when ``R`` equals the evaluated
+        partition's class ratio, and the Youden/NER-optimal threshold equivalence
+        holds only there too. On a stratified split every partition returns the
+        population ratio and the study default applies unchanged; on a temporal
+        split they diverge, and this is how a caller finds out by how much.
+        """
+        y = np.asarray(y)
+        out = {}
+        for name in ("train", "val", "test"):
+            part = y[getattr(self, name)]
+            n_pos = int(part.sum())
+            if n_pos == 0:
+                raise ValueError(f"{name} partition has no positives; class ratio undefined.")
+            out[name] = float((len(part) - n_pos) / n_pos)
+        return out
 
 
 def stratified_split(
@@ -88,17 +114,58 @@ def stratified_split(
     return Split(np.sort(train_idx), np.sort(val_idx), np.sort(test_idx), "stratified")
 
 
+def derive_temporal_boundaries(
+    steps: pd.Series | np.ndarray,
+    *,
+    train_size: float = C.SPLIT_TRAIN,
+    val_size: float = C.SPLIT_VAL,
+) -> tuple[int, int]:
+    """Boundaries that land nearest the target proportions on *these* steps.
+
+    For each target cumulative share, take the largest step whose cumulative row
+    count does not exceed it. A boundary cannot split an hour, so this is the
+    closest achievable cut from below.
+
+    This exists so the constants in ``constants.py`` are *derived* from the file
+    rather than guessed at it. Run it against the real data and the pair it
+    returns is what belongs in ``TEMPORAL_TRAIN_END`` / ``TEMPORAL_VAL_END``.
+    """
+    steps = np.asarray(steps)
+    values, counts = np.unique(steps, return_counts=True)
+    cumulative = np.cumsum(counts) / len(steps)
+
+    def largest_below(target: float) -> int:
+        eligible = np.flatnonzero(cumulative <= target)
+        return int(values[eligible[-1]] if eligible.size else values[0])
+
+    return largest_below(train_size), largest_below(train_size + val_size)
+
+
 def temporal_split(
     steps: pd.Series | np.ndarray,
     *,
     train_end: int = C.TEMPORAL_TRAIN_END,
     val_end: int = C.TEMPORAL_VAL_END,
+    tolerance: float | None = C.TEMPORAL_PROPORTION_TOLERANCE,
 ) -> Split:
     """Split on simulation time -- train on the past, test on the future.
 
-    Boundaries default to steps 520 and 632, chosen to land near 70/15/15 by
-    row count. Call ``Split.sizes()`` to confirm on the real data; PaySim's
-    hourly volume is not uniform, so exact proportions drift a little.
+    Boundaries default to steps 322 and 377, **derived** from the canonical
+    file's cumulative row count by ``derive_temporal_boundaries``. On the real
+    data they realise 69.68 / 15.30 / 15.02.
+
+    The realised proportions are now asserted rather than assumed. PaySim's
+    hourly volume is heavily front-loaded, and the previous boundaries
+    (520 / 632) were chosen as if it were uniform: they realised 95.6 / 3.0 / 1.4
+    and nothing caught it, because the only test guarding them ran on a synthetic
+    frame with uniformly drawn steps. Pass ``tolerance=None`` to explore other
+    boundaries deliberately.
+
+    Hitting the row proportions does **not** equalise the class prior: fraud
+    prevalence is non-stationary in PaySim, so these partitions carry
+    0.082% / 0.059% / 0.420% fraud. A caller evaluating NER on a temporal
+    partition must supply a cost ratio appropriate to that partition rather than
+    the population default -- see ``Split.class_ratio``.
     """
     steps = np.asarray(steps)
     idx = np.arange(len(steps))
@@ -110,6 +177,29 @@ def temporal_split(
     for name, part in (("train", train_idx), ("val", val_idx), ("test", test_idx)):
         if part.size == 0:
             raise ValueError(f"temporal split produced an empty {name} partition.")
+
+    if tolerance is not None:
+        targets = {"train": C.SPLIT_TRAIN, "val": C.SPLIT_VAL, "test": C.SPLIT_TEST}
+        realised = {
+            "train": len(train_idx) / len(steps),
+            "val": len(val_idx) / len(steps),
+            "test": len(test_idx) / len(steps),
+        }
+        off = {
+            name: (realised[name], targets[name])
+            for name in targets
+            if abs(realised[name] - targets[name]) > tolerance
+        }
+        if off:
+            detail = "; ".join(
+                f"{name} {got:.2%} vs target {want:.0%}"
+                for name, (got, want) in sorted(off.items())
+            )
+            raise ValueError(
+                f"temporal boundaries {train_end}/{val_end} realise proportions outside "
+                f"the {tolerance:.0%} tolerance: {detail}. "
+                f"Re-derive them with splits.derive_temporal_boundaries(steps)."
+            )
 
     return Split(train_idx, val_idx, test_idx, "temporal")
 

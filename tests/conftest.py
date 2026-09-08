@@ -61,3 +61,21 @@ def paysim_like() -> pd.DataFrame:
     df.loc[fraud_idx, "newbalanceDest"] = 0.0
 
     return df
+
+
+@pytest.fixture
+def front_loaded_steps() -> np.ndarray:
+    """Steps shaped like the real file's: most volume early, a long thin tail.
+
+    ``paysim_like`` draws steps uniformly, which is what let boundaries realising
+    95.6 / 3.0 / 1.4 on the real data pass a proportions test. PaySim's hourly
+    volume collapses after roughly the first half of the simulation, so any test
+    that claims to check split proportions has to run against that shape rather
+    than a flat one.
+    """
+    rng = np.random.default_rng(7)
+    n = 60_000
+    # Beta(1.4, 4) puts ~70% of mass in the first ~30% of the range, which is
+    # the front-loading regime that broke the old constants.
+    steps = (rng.beta(1.4, 4.0, size=n) * C.MAX_STEP).astype("int64")
+    return np.clip(steps, 0, C.MAX_STEP)

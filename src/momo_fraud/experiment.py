@@ -17,6 +17,7 @@ sweep nine values of R across three threshold rules for free.
 
 from __future__ import annotations
 
+import json
 import time
 from dataclasses import dataclass, field
 
@@ -148,6 +149,13 @@ def evaluate_configs(
         # R = N_neg/N_pos the NER-optimal and Youden thresholds are the same
         # number, so configs B and C coincide at the default R. That is a
         # theorem, not a defect -- see risk.youden_threshold.
+        #
+        # The cost of that choice falls on config F, which *trains* under
+        # C_FN = R * s_i but is thresholded and scored under C_FN = R. F is
+        # therefore a training-side sensitivity variant measured on the common
+        # objective, not a self-consistent example-dependent experiment, and its
+        # result must not be read as one. models.sample_weights and
+        # docs/config_f_cost_objectives.md carry the full statement.
         chosen = E.select_threshold(y_val, fit.val_scores, rule, r)
         threshold = chosen.threshold
 
@@ -233,7 +241,7 @@ def run_grid(
 SUSPICIOUSLY_PERFECT = 0.99
 
 
-def headroom_by_rung(results: pd.DataFrame) -> pd.Series:
+def headroom_by_rung(results: pd.DataFrame, *, split: str = "val") -> pd.Series:
     """Best achievable NER per feature set -- how much risk is left to remove.
 
     This is the number that decides where a cost-sensitive comparison can
@@ -241,8 +249,17 @@ def headroom_by_rung(results: pd.DataFrame) -> pd.Series:
     best possible threshold, so a rung scoring near zero is already solved: every
     configuration lands in the same sliver and any difference between them is
     noise rather than effect.
+
+    **Computed on validation.** Choosing the feature set is a model-selection
+    decision, and this function feeds ``choose_rung``, so reading it from the
+    test partition would make the whole downstream comparison test-selected.
+    That is what the earlier version did (it hard-coded ``split == 'test'``), and
+    it is the defect this parameter exists to prevent. ``split="test"`` remains
+    available for reporting the same quantity *after* the rung is locked.
     """
-    return (results.query("split == 'test'")
+    if split not in {"train", "val", "test"}:
+        raise ValueError(f"unknown split {split!r}; expected train, val or test")
+    return (results.query("split == @split")
             .groupby("feature_set")["ner"].min()
             .rename("best_ner"))
 
@@ -252,6 +269,7 @@ def choose_rung(
     order: list[str],
     *,
     floor: float = 0.05,
+    exclude: frozenset[str] | set[str] | None = None,
 ) -> tuple[str, str]:
     """Pick the least-ablated rung that still leaves room to improve.
 
@@ -262,13 +280,99 @@ def choose_rung(
 
     Returns the rung and the rationale, both of which get recorded so the choice
     is auditable rather than assumed.
+
+    Diagnostic rungs are excluded by default. ``no_balance_state`` exists to
+    answer a question about the destination-side columns, not to compete for the
+    main feature set, and keeping it out of the ladder was previously a matter of
+    the caller remembering to filter it. Pass ``exclude=frozenset()`` to consider
+    every rung deliberately.
     """
+    from .features import DIAGNOSTIC_FEATURE_SETS
+
+    excluded = DIAGNOSTIC_FEATURE_SETS if exclude is None else exclude
+    order = [r for r in order if r not in excluded]
+    if not order:
+        raise ValueError("no selectable rungs remain after exclusions.")
+
     ordered = headroom.reindex(order).dropna()
+    if ordered.empty:
+        raise ValueError(
+            f"headroom has no values for any selectable rung {order}."
+        )
+
     viable = ordered[ordered >= floor]
 
     if viable.empty:
         return ordered.idxmax(), "no rung clears the floor; taking the most headroom"
     return viable.index[0], f"least-ablated rung with best NER >= {floor}"
+
+
+#: Where the experimental-rung decision lives, most authoritative first. The
+#: ``_v2`` file is the decision recomputed on **validation** during the repair
+#: pass; the unsuffixed one is the original, which selected on test NER and is
+#: kept as the record of what the superseded procedure produced.
+RUNG_DECISION_FILES = ["03_experimental_rung_v2.json", "03_experimental_rung.json"]
+
+
+def load_experimental_rung(results_dir=None) -> dict:
+    """The experimental-rung decision, preferring the validation-based one.
+
+    Notebooks read the rung from disk rather than hard-coding it, so that the
+    feature set every downstream experiment runs at is traceable to a recorded
+    decision. This resolves which recorded decision is current, so the choice
+    does not have to be repeated -- and silently diverge -- in six notebooks.
+
+    Both files name the same rung (``no_origin_balance``); the selection split
+    did not change the outcome. The preference order still matters, because a
+    future re-derivation must not be able to fall back to the test-selected file
+    without anyone noticing.
+    """
+    from pathlib import Path as _Path
+
+    directory = _Path(results_dir) if results_dir is not None else E.RESULTS_DIR
+    for name in RUNG_DECISION_FILES:
+        path = directory / name
+        if path.exists():
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            payload.setdefault("selected_on", "test")
+            payload["source_file"] = name
+            return payload
+
+    raise FileNotFoundError(
+        f"No rung decision found in {directory}. Run notebook 03, or "
+        f"scripts/repairs/repair_02_validation_selection.py."
+    )
+
+
+def select_best_config(
+    results: pd.DataFrame,
+    *,
+    metric: str = "ner",
+    on: str = "val",
+    group: str = "learner",
+) -> pd.DataFrame:
+    """The lowest-risk configuration per learner, **selected on validation**.
+
+    Returns one row per ``group``, carrying the winning config key and the
+    selection-split value of ``metric``. Report the test value by joining this
+    back onto the test rows -- selection and reporting stay separate operations
+    so the second cannot quietly become the first.
+
+    The earlier notebook-04 cell took ``idxmin`` over the *test* rows directly,
+    which chose the configuration on the same partition it then reported. This
+    exists so that path is not available by accident.
+    """
+    if on not in {"train", "val", "test"}:
+        raise ValueError(f"unknown split {on!r}; expected train, val or test")
+
+    selection = results.query("split == @on")
+    if selection.empty:
+        raise ValueError(f"no rows with split == {on!r} to select on.")
+
+    winners = selection.loc[selection.groupby(group)[metric].idxmin()]
+    return (winners[[group, "config", "level", "threshold_rule", metric]]
+            .rename(columns={metric: f"{metric}_{on}"})
+            .reset_index(drop=True))
 
 
 #: Rungs whose feature set is comparable to the published work. Thar & Wai

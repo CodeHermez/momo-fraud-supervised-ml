@@ -93,10 +93,30 @@ SPLIT_TRAIN = 0.70
 SPLIT_VAL = 0.15
 SPLIT_TEST = 0.15
 
-#: Temporal split boundaries on ``step``, chosen to land near 70/15/15 by row
-#: count. Verified against the real distribution in ``splits.temporal_split``.
-TEMPORAL_TRAIN_END = 520
-TEMPORAL_VAL_END = 632
+#: Temporal split boundaries on ``step``, derived from the **empirical cumulative
+#: row count** of the canonical file: the largest step whose cumulative share does
+#: not exceed 70% (train) and 85% (train+val). On the real data these land at
+#: 69.68 / 15.30 / 15.02.
+#:
+#: The previous values (520 / 632) were assumed rather than derived and realised
+#: 95.6 / 3.0 / 1.4, because PaySim's hourly volume is heavily front-loaded. That
+#: is now caught rather than assumed: ``splits.temporal_split`` asserts the
+#: realised proportions against ``TEMPORAL_PROPORTION_TOLERANCE``.
+TEMPORAL_TRAIN_END = 322
+TEMPORAL_VAL_END = 377
+
+#: Absolute tolerance on each realised temporal partition share. A step boundary
+#: cannot split an hour, so exact 70/15/15 is unreachable; 3 points is loose
+#: enough for that granularity and tight enough to have failed the old values.
+TEMPORAL_PROPORTION_TOLERANCE = 0.03
+
+#: Fraud prevalence in PaySim is **strongly non-stationary in simulated time**:
+#: under the boundaries above the partitions carry 0.082% / 0.059% / 0.420%
+#: fraud, so the temporal test set's class ratio is 237.3 against a population
+#: 773.7. Recorded here because it is the reason the temporal arm must report a
+#: split-specific cost ratio alongside the study default -- see
+#: ``docs/temporal_split_repair.md``.
+TEMPORAL_PREVALENCE_IS_NONSTATIONARY = True
 
 LEARNERS = ["logistic_regression", "decision_tree", "random_forest", "xgboost"]
 

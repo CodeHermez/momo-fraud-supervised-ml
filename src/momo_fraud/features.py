@@ -53,14 +53,42 @@ DEST_BALANCE_FEATURES = [
 #: The levels are **cumulative and strictly nested** -- each removes a superset
 #: of the one before. Without that, the ablation is not a ladder and results at
 #: different levels cannot be read as a progression.
+#:
+#: ``no_balance_state`` sits between ``no_origin_balance`` and ``transaction_only``
+#: and is a diagnostic, not a candidate for the main rung -- see
+#: ``DIAGNOSTIC_FEATURE_SETS`` below.
 FEATURE_SETS: dict[str, list[str]] = {
     "full": [],
     "no_error_features": sorted(set(ARTIFACT_FEATURES)),
     "no_origin_balance": sorted(set(ARTIFACT_FEATURES) | set(ORIGIN_BALANCE_FEATURES)),
+    "no_balance_state": sorted(
+        set(ARTIFACT_FEATURES) | set(ORIGIN_BALANCE_FEATURES) | set(DEST_BALANCE_FEATURES)
+    ),
     "transaction_only": sorted(
         set(ARTIFACT_FEATURES) | set(ORIGIN_BALANCE_FEATURES) | set(DEST_BALANCE_FEATURES)
     ),
 }
+
+#: ``no_balance_state`` is the **symmetric** counterpart of ``no_origin_balance``:
+#: the argument that removed the origin balances -- that a tree reconstructs
+#: ``amount == oldbalanceOrg`` from the raw columns even after the derived error
+#: feature is gone -- applies verbatim to the destination side, where
+#: ``oldbalanceDest + amount - newbalanceDest`` is equally reconstructible and
+#: PaySim never credits the mule account at all. That argument was not applied
+#: there, so ``no_origin_balance`` retains ``destZeroAfter``, which the notebook-09
+#: permutation table ranks second overall.
+#:
+#: It is currently a **diagnostic rung only**. It is deliberately *not* the main
+#: experimental feature set: promoting it would change the feature basis of every
+#: existing CSL result, and that is a research decision to be taken explicitly on
+#: the evidence, not a side effect of a repair pass. See
+#: ``docs/destination_artefact_diagnostic.md``.
+#:
+#: On the current column list it happens to select the same columns as
+#: ``transaction_only``; the two are kept distinct because they mean different
+#: things (a balance-state ablation versus "transaction fields only") and would
+#: diverge the moment a non-balance feature is added.
+DIAGNOSTIC_FEATURE_SETS = frozenset({"no_balance_state"})
 
 
 #: The columns Lokanan (2023) actually modelled: the raw PaySim numerics plus

@@ -180,6 +180,160 @@ def bootstrap_ci(
     return float(point), float(lo), float(hi)
 
 
+def paired_bootstrap_delta(
+    y_true,
+    scores_a,
+    scores_b,
+    metric_fn,
+    *,
+    n_boot: int = 2000,
+    alpha: float = 0.05,
+    seed: int = C.RANDOM_SEED,
+) -> dict[str, float]:
+    """Paired bootstrap of ``metric(A) - metric(B)`` on shared resamples.
+
+    Both score vectors are indexed by the **same** resampled rows in every
+    replicate, so the observation-level noise the two models share cancels out of
+    the difference. That is the whole point: A and B were scored on the identical
+    test set, and treating their intervals as independent throws that pairing
+    away.
+
+    This replaces the earlier procedure, which declared a difference when two
+    *marginal* CIs failed to overlap. Non-overlap does imply a difference, but
+    overlap does **not** imply its absence -- the marginal test is strictly
+    weaker than the paired one and cannot support a "no difference" verdict in
+    either direction. Anything reported as indistinguishable under the old rule
+    has to be re-decided here.
+
+    Resampling is stratified within class, matching ``bootstrap_ci``: at 0.129%
+    prevalence an unstratified draw occasionally lands a badly distorted positive
+    count and widens the interval for reasons unrelated to either model.
+
+    Returns the point delta, its percentile CI, and ``p_two_sided`` -- the
+    proportion of replicates falling on the opposite side of zero from the point
+    estimate, doubled. Read that as a bootstrap achieved significance level, not
+    as a p-value from a parametric test.
+    """
+    y_true = np.asarray(y_true)
+    scores_a = np.asarray(scores_a, dtype=float)
+    scores_b = np.asarray(scores_b, dtype=float)
+    rng = np.random.default_rng(seed)
+
+    pos_idx = np.flatnonzero(y_true == 1)
+    neg_idx = np.flatnonzero(y_true == 0)
+
+    deltas = np.empty(n_boot, dtype=float)
+    for i in range(n_boot):
+        sample = np.concatenate([
+            rng.choice(pos_idx, size=len(pos_idx), replace=True),
+            rng.choice(neg_idx, size=len(neg_idx), replace=True),
+        ])
+        y_s = y_true[sample]
+        deltas[i] = metric_fn(y_s, scores_a[sample]) - metric_fn(y_s, scores_b[sample])
+
+    point = float(metric_fn(y_true, scores_a) - metric_fn(y_true, scores_b))
+    lo, hi = np.quantile(deltas, [alpha / 2, 1 - alpha / 2])
+
+    n_cross = int((deltas >= 0).sum() if point < 0 else (deltas <= 0).sum())
+    return {
+        "delta": point,
+        "ci_low": float(lo),
+        "ci_high": float(hi),
+        "n_boot": int(n_boot),
+        "n_crossing_zero": n_cross,
+        "prop_crossing_zero": n_cross / n_boot,
+        "p_two_sided": float(min(1.0, 2.0 * n_cross / n_boot)),
+        "excludes_zero": bool(lo > 0 or hi < 0),
+    }
+
+
+def _weighted_average_precision(y_sorted: np.ndarray, w_sorted: np.ndarray) -> float:
+    """Average precision from per-row multiplicities, on a pre-sorted vector.
+
+    A bootstrap resample is a multiset of the original rows, so it is fully
+    described by an integer multiplicity per row. Working from multiplicities
+    lets the O(n log n) sort be hoisted out of the replicate loop and done once
+    per model, which is the difference between minutes and hours on a 954k-row
+    test set.
+    """
+    tp = np.cumsum(y_sorted * w_sorted, dtype=np.float64)
+    fp = np.cumsum((1 - y_sorted) * w_sorted, dtype=np.float64)
+    n_pos = tp[-1]
+    if n_pos == 0:
+        return float("nan")
+
+    denominator = tp + fp
+    precision = np.divide(tp, denominator, out=np.zeros_like(tp), where=denominator > 0)
+    # Each positive copy contributes one recall increment of 1/n_pos.
+    return float(np.sum(precision * y_sorted * w_sorted) / n_pos)
+
+
+def paired_bootstrap_pr_auc(
+    y_true,
+    scores_a,
+    scores_b,
+    *,
+    n_boot: int = 2000,
+    alpha: float = 0.05,
+    seed: int = C.RANDOM_SEED,
+) -> dict[str, float]:
+    """``paired_bootstrap_delta`` for PR-AUC, fast enough to actually run at 2000.
+
+    Same procedure and same guarantees as the generic version -- shared
+    stratified resamples, paired difference -- but each score vector is sorted
+    once up front and every replicate is an O(n) weighted pass over that fixed
+    order. Agreement with the generic path is asserted in
+    ``tests/test_evaluate_repairs.py``.
+
+    The point estimate is computed the same way, so it differs from
+    ``sklearn.metrics.average_precision_score`` at around 1e-8 through tie
+    handling. That is six orders of magnitude below the smallest delta this
+    study reports, and it is identical for both models in the pair, so it
+    cancels out of the difference entirely.
+    """
+    y_true = np.asarray(y_true).astype(np.int64)
+    rng = np.random.default_rng(seed)
+
+    prepared = []
+    for scores in (scores_a, scores_b):
+        order = np.argsort(-np.asarray(scores, dtype=float), kind="stable")
+        prepared.append((order, y_true[order]))
+
+    pos_idx = np.flatnonzero(y_true == 1)
+    neg_idx = np.flatnonzero(y_true == 0)
+    n = len(y_true)
+
+    deltas = np.empty(n_boot, dtype=float)
+    for i in range(n_boot):
+        counts = np.bincount(
+            np.concatenate([
+                rng.choice(pos_idx, size=len(pos_idx), replace=True),
+                rng.choice(neg_idx, size=len(neg_idx), replace=True),
+            ]),
+            minlength=n,
+        )
+        a, b = (_weighted_average_precision(y_s, counts[order])
+                for order, y_s in prepared)
+        deltas[i] = a - b
+
+    ones = np.ones(n, dtype=np.int64)
+    point = float(_weighted_average_precision(prepared[0][1], ones[prepared[0][0]])
+                  - _weighted_average_precision(prepared[1][1], ones[prepared[1][0]]))
+    lo, hi = np.quantile(deltas, [alpha / 2, 1 - alpha / 2])
+
+    n_cross = int((deltas >= 0).sum() if point < 0 else (deltas <= 0).sum())
+    return {
+        "delta": point,
+        "ci_low": float(lo),
+        "ci_high": float(hi),
+        "n_boot": int(n_boot),
+        "n_crossing_zero": n_cross,
+        "prop_crossing_zero": n_cross / n_boot,
+        "p_two_sided": float(min(1.0, 2.0 * n_cross / n_boot)),
+        "excludes_zero": bool(lo > 0 or hi < 0),
+    }
+
+
 def paired_test(a: np.ndarray, b: np.ndarray) -> dict[str, float]:
     """Wilcoxon signed-rank on paired per-fold scores.
 
