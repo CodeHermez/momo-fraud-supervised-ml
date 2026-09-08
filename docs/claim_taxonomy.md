@@ -147,7 +147,9 @@ the 12-comparison single-seed result when E3 offers 116/116 across 16 cells; #5
 far stronger; #6 (threshold optimisation) predates E6's equivalence result; #7
 (prevalence and precision) carries a caveat that E4 has since discharged.
 
-**Nothing here is a reason to change a number.** The measurements are unaffected.
+**Resolved under CHANGE-07.** The four conclusions now cite E2/E3/E4/E6 and the three guards are scoped to the grid they are true of; counts are unchanged at 9 and 7. The audit below is retained as the record of what was found.
+
+**Nothing here was a reason to change a number.** The measurements are unaffected.
 What is stale is the study's record of *what it is entitled to say* about them —
 which is exactly the record the report will be written from.
 

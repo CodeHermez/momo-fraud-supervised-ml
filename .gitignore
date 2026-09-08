@@ -37,3 +37,18 @@ __pycache__/
 
 # Editable-install build metadata (`pip install -e .`).
 /src/*.egg-info/
+
+# LaTeX build artifacts. The report source is report/*.tex + refs.bib + the
+# generated tables; everything below is produced by latexmk.
+report/*.aux
+report/*.bbl
+report/*.bcf
+report/*.blg
+report/*.fdb_latexmk
+report/*.fls
+report/*.log
+report/*.out
+report/*.pdf
+report/*.run.xml
+report/*.toc
+report/*.synctex.gz

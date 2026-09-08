@@ -242,3 +242,62 @@ None. The change is to how an existing artifact is framed and reported.
 Decided and documented. `docs/repair_report.md` section E decision 5 is closed;
 the entry there is left as written, since this log is the record of what was
 decided afterwards.
+
+---
+
+## CHANGE-07 - The freeze's claim lists were brought up to date with E2/E3/E4/E6
+
+### What changed
+
+`baseline.SUPPORTED_CONCLUSIONS` and `baseline.FORBIDDEN_CLAIMS` were written at
+freeze time and contained **no reference to E2, E3, E4 or E6**, all of which ran
+afterwards. Four conclusions had their evidence extended and three forbidden
+claims were narrowed to the grid they are actually true of:
+
+| Entry | Before | After |
+|---|---|---|
+| Conclusion 4 (CSL PR-AUC deltas) | 12 of 12, one seed and split | adds E3: 116/116 over 4 split seeds x 4 model seeds |
+| Conclusion 5 (learner- and cost-dependence) | decision-cost sweep, 17 of 36 cells | adds E3 for learner-dependence, E2 for cost-dependence |
+| Conclusion 6 (threshold optimisation) | 06_threshold_markers only | adds E6: where the B/C comparison is informative at all |
+| Conclusion 7 (prevalence and precision) | notebook 05, caveated as not isolating | adds E4, which does isolate it |
+| Forbidden 4 (training cost ratio) | stated the sweep's limit | now also names E2 as where R_train claims belong |
+| Forbidden 5 (prevalence) | stated notebook 05's limit | now distinguishes what E4 licenses |
+| Forbidden 6 (seeds and splits) | "every one rests on a single model seed and a single split seed" | scoped to the notebook-04 grid; names E3 as what licenses a stability claim |
+
+The count of supported conclusions (9) and forbidden claims (7) is unchanged. No
+entry was added or removed.
+
+### Why
+
+Forbidden claim 6 had become **factually false**. E3 ran 220 fits over four split
+seeds and four model seeds; the sentence "every one rests on a single model seed
+and a single split seed" was true of the notebook-04 grid and untrue of E3. Read
+literally, the guard instructed the report to disclaim the robustness E3 was
+commissioned to establish.
+
+That is the inverse of what these lists are for. They exist to stop the study
+overstating its evidence; left stale, they were forcing it to understate the
+most expensive evidence it has.
+
+The two other narrowings and the four evidence extensions are the same defect in
+milder form: true of the artifact they were written against, incomplete once a
+later experiment addressed the same question.
+
+### Was this decided before or after seeing results?
+
+**After, and unavoidably so** - the entries could not reference experiments that
+had not been run when the freeze was written. This is a correction of the
+record's currency, not of any finding.
+
+**No measurement, threshold, model or number changed.** Nothing was re-run and
+nothing was re-selected. A better score is not a reason to unfreeze and no score
+moved here. What changed is the study's record of what it is entitled to say.
+
+### Experiments affected
+
+None. The affected artifact is the report, which is written from these lists.
+
+### Status
+
+Repaired. `docs/claim_taxonomy.md` carries the audit that found it and is the
+working reference for claim strength when drafting.

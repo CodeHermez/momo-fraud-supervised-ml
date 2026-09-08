@@ -308,19 +308,33 @@ SUPPORTED_CONCLUSIONS = [
     {"claim": "CSL methods show consistently negative PR-AUC deltas against the "
               "unweighted baseline.",
      "evidence": "results/04_h1_paired_bootstrap.csv -- 12 of 12 negative, every "
-                 "paired CI excluding zero, n_boot 2000"},
+                 "paired CI excluding zero, n_boot 2000. Extended by E3 "
+                 "(results/E3_paired_deltas.csv, docs/E3_report.md): 116 of 116 "
+                 "paired comparisons negative over 4 split seeds x 4 model seeds, "
+                 "so this is no longer a single-seed result -- cite E3 for it"},
     {"claim": "The effect of CSL on NER is learner- and cost-dependent.",
      "evidence": "results/06_decision_cost_sweep.csv -- CSL-trained models reach "
                  "lower NER in 17 of 36 cells; note R_train is fixed at 773.70 "
-                 "throughout, so this varies the decision cost only"},
+                 "throughout, so this varies the decision cost only. The "
+                 "learner-dependence is established by E3 (LR and DT benefit "
+                 "64/64, RF and XGB harmed 61/64, reproducing in every split and "
+                 "seed) and the cost-dependence by E2, which sweeps R_train over "
+                 "{10, 50, 100, 773.70, 2000, 5000} across 364 cells"},
     {"claim": "Threshold optimisation produces substantial risk reductions "
               "relative to a fixed 0.5 threshold.",
      "evidence": "results/06_threshold_markers.csv -- e.g. logistic regression "
-                 "0.6591 -> 0.2499, XGBoost 0.2590 -> 0.1314"},
+                 "0.6591 -> 0.2499, XGBoost 0.2590 -> 0.1314. E6 establishes "
+                 "where the threshold-rule comparison is informative at all: "
+                 "B and C are provably one rule at R = N_neg/N_pos and measured "
+                 "identical in 104/104 cells, diverging only away from it"},
     {"claim": "Evaluation prevalence has a major effect on precision.",
      "evidence": "results/05_precision_collapse.csv; see "
                  "results/05_arm_interpretation.json for what the arms do and do "
-                 "not isolate -- the A-to-B contrast does not vary prevalence alone"},
+                 "not isolate -- the A-to-B contrast does not vary prevalence "
+                 "alone. E4 does isolate it (results/E4_prevalence_summary.csv, "
+                 "docs/E4_report.md): one model, one locked threshold, all real "
+                 "positives retained, negatives subsampled, 104 cells. Cite E4 "
+                 "for the claim and notebook 05 only for the narrative"},
     {"claim": "Temporal generalisation is harder for 3 of 4 learners.",
      "evidence": "results/09_temporal_correction.csv -- on the repaired split "
                  "(69.68/15.30/15.02); the superseded split showed the opposite "
@@ -340,12 +354,21 @@ FORBIDDEN_CLAIMS = [
     "CSL never helps. Its effect on end-to-end risk is learner- and "
     "cost-dependent; only the ranking-quality result is uniformly negative.",
     "The decision-cost sweep shows CSL winning at a given training cost ratio. "
-    "Every CSL model in it was trained at R_train = 773.70.",
-    "Evaluation prevalence alone accounts for the precision collapse. The "
-    "notebook 05 arms also differ in syntheticness, ENN cleaning and "
-    "train/test contamination.",
-    "Any CSL delta is stable across seeds or splits. Every one rests on a "
-    "single model seed and a single split seed.",
+    "Every CSL model in it was trained at R_train = 773.70, so it varies the "
+    "decision cost only. E2 is the training-ratio experiment -- R_train over "
+    "{10, 50, 100, 773.70, 2000, 5000}, 364 cells -- and is what any claim "
+    "about R_train must cite.",
+    "Evaluation prevalence alone accounts for the precision collapse, on the "
+    "strength of the notebook 05 arms. Those arms also differ in syntheticness, "
+    "ENN cleaning and train/test contamination. E4 isolates prevalence exactly "
+    "and is what licenses the claim; notebook 05 supports the narrative only.",
+    "Any CSL delta is stable across seeds or splits, on the strength of the "
+    "notebook-04 grid. Those 28 fits rest on a single model seed and a single "
+    "split seed. E3 is what licenses a stability claim -- 220 fits over 4 split "
+    "seeds and 4 model seeds, 116/116 paired PR-AUC comparisons negative, the "
+    "learner-dependent NER pattern reproducing in every cell. Cite E3, not "
+    "notebook 04, and note that E3 varied one dataset, one feature set and one "
+    "cost ratio.",
     AUTH_DESIGN_FORBIDDEN_CLAIM,
 ]
 
