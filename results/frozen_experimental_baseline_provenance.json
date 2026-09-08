@@ -1,0 +1,125 @@
+{
+  "experiment": "frozen_experimental_baseline",
+  "recorded_utc": "2026-08-27T14:48:15+00:00",
+  "git": {
+    "commit": "b2e6f6243676544cb68b25aac83ba18d5eb139e5",
+    "branch": "experiment-suite",
+    "dirty": true
+  },
+  "environment": {
+    "python_version": "3.14.4",
+    "python_implementation": "CPython",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "numpy": "2.4.4",
+      "pandas": "3.0.2",
+      "pyarrow": "24.0.0",
+      "scikit-learn": "1.8.0",
+      "xgboost": "3.4.0",
+      "lightgbm": "4.7.0",
+      "imbalanced-learn": "0.14.2",
+      "shap": "0.52.0",
+      "scipy": "1.16.3",
+      "matplotlib": "3.10.9",
+      "seaborn": "0.13.2"
+    }
+  },
+  "dataset": {
+    "dataset": "ealaxi/paysim1",
+    "csv_sha256": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+    "n_transactions": 6362620,
+    "n_fraud": 8213,
+    "n_legitimate": 6354407,
+    "prevalence": 0.001290820448180152,
+    "imbalance_ratio": 773.7010836478753,
+    "n_steps": 743,
+    "n_days": 30.958333333333332
+  },
+  "seed": 42,
+  "split": {
+    "strategy": "stratified",
+    "train": 0.7,
+    "val": 0.15,
+    "test": 0.15,
+    "split_seed": 42,
+    "stratified_on": "isFraud",
+    "implementation": "splits.stratified_split",
+    "invariants": [
+      "same train/val/test partitions across directly compared configurations",
+      "FeatureBuilder fitted on training rows only",
+      "resampling (RUS, SMOTE) applied to training rows only",
+      "threshold selected on validation",
+      "threshold locked before any test evaluation",
+      "test set read once, for final reporting"
+    ]
+  },
+  "model": {
+    "learners": [
+      "logistic_regression",
+      "decision_tree",
+      "random_forest",
+      "xgboost"
+    ],
+    "excluded": {
+      "lightgbm": "failed fit; see results/10_failed_runs.csv"
+    },
+    "hyperparameters": "models.make_learner defaults; fixed, not tuned"
+  },
+  "csl": {
+    "taxonomy": [
+      "baseline",
+      "algorithm_and_data_level",
+      "decision_level",
+      "sensitivity_analysis"
+    ]
+  },
+  "cost_ratio": {
+    "definition": "R = 'missing one fraud is as bad as R false alarms'",
+    "C_FP": 1.0,
+    "C_FN": "R",
+    "R_default": 773.7010836478753,
+    "R_default_derivation": "N_legit / N_fraud over the full dataset",
+    "bayes_threshold": "lambda = 1 / (1 + R)",
+    "R_train_vs_R_eval": "R_train enters scale_pos_weight, the RUS target and the severity weights. R_eval enters threshold selection and the NER computation. They are equal at the default R in every experiment run so far, and MUST be recorded separately regardless -- the existing decision-cost sweep varies R_eval alone at fixed R_train = 773.70."
+  },
+  "thresholds": {
+    "order": "TRAIN -> FIT -> VALIDATION -> SELECT -> LOCK -> TEST -> REPORT",
+    "rules": [
+      "fixed",
+      "youden",
+      "ner_optimal"
+    ],
+    "selected_on": "val",
+    "applied_to": "test",
+    "implementation": "evaluate.select_threshold",
+    "note": "At R = N_neg/N_pos the Youden and NER-optimal thresholds are the same number for every model -- a theorem, not a coincidence. Configs B and C are one condition at the default R, giving six distinct conditions rather than seven."
+  },
+  "evaluation": {
+    "primary_ranking": "pr_auc",
+    "primary_decision_risk": "ner",
+    "also_reported": [
+      "precision",
+      "recall",
+      "f1",
+      "mcc",
+      "fp",
+      "fn",
+      "n_flagged",
+      "alert_rate",
+      "brier",
+      "roc_auc"
+    ],
+    "excluded": {
+      "accuracy": "Never computed. At 0.129% prevalence a constant-negative predictor scores 0.9987, so it cannot discriminate between models."
+    },
+    "roc_auc_caveat": "Reported for comparability with the prior work only. Near-insensitive to false positives at this imbalance; not used to rank models.",
+    "uncertainty": {
+      "procedure": "paired stratified bootstrap of the delta on shared resamples",
+      "n_boot": 2000,
+      "implementation": "evaluate.paired_bootstrap_pr_auc / paired_bootstrap_delta",
+      "forbidden": "CI overlap must not be used as a significance decision. Non-overlap implies a difference; overlap does not imply its absence.",
+      "language": "Say 'the paired interval excludes zero'. Do not say 'statistically significant' unless a procedure supporting that phrase was run."
+    }
+  },
+  "notes": "Freeze phase. No experiment was run, no model fitted, no hyperparameter tuned, no feature added or removed."
+}

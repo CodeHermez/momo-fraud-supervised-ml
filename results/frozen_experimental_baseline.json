@@ -1,0 +1,275 @@
+{
+  "status": "FROZEN",
+  "frozen_at_utc": "2026-08-27T14:48:15+00:00",
+  "phase": "post-repair frozen baseline",
+  "authority": "docs/repair_report.md",
+  "dataset": {
+    "identifier": "ealaxi/paysim1",
+    "sha256": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+    "n_transactions": 6362620,
+    "n_fraud": 8213,
+    "prevalence": 0.001290820448180152,
+    "validated_on_load_by": "data.validate"
+  },
+  "feature_set": {
+    "frozen_rung": "no_origin_balance",
+    "claim": "reduced simulator artefact exposure",
+    "features_dropped": [
+      "errorBalanceDest",
+      "errorBalanceOrig",
+      "newbalanceOrig",
+      "oldbalanceOrg",
+      "origZeroAfter",
+      "origZeroBefore"
+    ],
+    "selected_on": "val",
+    "selection_criterion": "best NER >= 0.05, least-ablated viable rung",
+    "validation_ner_at_rung": 0.1146545932099288,
+    "selectable_rungs": [
+      "full",
+      "no_error_features",
+      "no_origin_balance",
+      "transaction_only"
+    ],
+    "diagnostic_rungs": [
+      "no_balance_state"
+    ],
+    "rationale": [
+      "origin-side simulator artefact evidence justified removal",
+      "destination-side diagnostic did not establish an equivalent deterministic artefact",
+      "validation-based selection still selects no_origin_balance",
+      "therefore no evidence-based reason to change the main rung"
+    ],
+    "forbidden_claim": "Do not describe this feature set as simulator-independent or artefact-free. Say 'reduced simulator artefact exposure'."
+  },
+  "split": {
+    "strategy": "stratified",
+    "train": 0.7,
+    "val": 0.15,
+    "test": 0.15,
+    "split_seed": 42,
+    "stratified_on": "isFraud",
+    "implementation": "splits.stratified_split",
+    "invariants": [
+      "same train/val/test partitions across directly compared configurations",
+      "FeatureBuilder fitted on training rows only",
+      "resampling (RUS, SMOTE) applied to training rows only",
+      "threshold selected on validation",
+      "threshold locked before any test evaluation",
+      "test set read once, for final reporting"
+    ]
+  },
+  "seeds": {
+    "kinds": {
+      "model_seed": "Seeds estimator initialisation, bagging, column subsampling and the RUS draw. Varying it measures training stochasticity. Note that LogisticRegression and DecisionTreeClassifier are deterministic here, so it moves only random forest and XGBoost.",
+      "split_seed": "Seeds stratified_split. Varying it measures which rows landed in which partition. Held fixed at 42 for every result produced so far, so split variability is currently unmeasured."
+    },
+    "model_seed": 42,
+    "split_seed": 42
+  },
+  "cost": {
+    "definition": "R = 'missing one fraud is as bad as R false alarms'",
+    "C_FP": 1.0,
+    "C_FN": "R",
+    "R_default": 773.7010836478753,
+    "R_default_derivation": "N_legit / N_fraud over the full dataset",
+    "bayes_threshold": "lambda = 1 / (1 + R)",
+    "R_train_vs_R_eval": "R_train enters scale_pos_weight, the RUS target and the severity weights. R_eval enters threshold selection and the NER computation. They are equal at the default R in every experiment run so far, and MUST be recorded separately regardless -- the existing decision-cost sweep varies R_eval alone at fixed R_train = 773.70."
+  },
+  "models": {
+    "learners": [
+      "logistic_regression",
+      "decision_tree",
+      "random_forest",
+      "xgboost"
+    ],
+    "excluded": {
+      "lightgbm": "failed fit; see results/10_failed_runs.csv"
+    },
+    "hyperparameters": "models.make_learner defaults; fixed, not tuned"
+  },
+  "csl_taxonomy": {
+    "baseline": {
+      "variants": [
+        "unweighted"
+      ],
+      "configs": [
+        "A"
+      ],
+      "level": "none",
+      "objective": "unweighted log-loss / Gini",
+      "description": "No cost sensitivity anywhere."
+    },
+    "algorithm_and_data_level": {
+      "variants": [
+        "weighted",
+        "rus"
+      ],
+      "configs": [
+        "D",
+        "E",
+        "G"
+      ],
+      "level": "algorithm / data",
+      "objective": "class-constant: C_FP = 1, C_FN = R",
+      "description": "Class weighting (w+ = R, w- = 1) and random undersampling (N'_neg = N_neg / R). Both express the same class-constant cost matrix, one in the loss and one in the sample."
+    },
+    "decision_level": {
+      "variants": [
+        "unweighted"
+      ],
+      "configs": [
+        "B",
+        "C"
+      ],
+      "level": "decision",
+      "objective": "class-constant: C_FP = 1, C_FN = R",
+      "description": "Threshold optimisation on an unweighted model. At R = N_neg/N_pos the Youden and NER-optimal thresholds are provably identical, so B and C are ONE condition at the default R."
+    },
+    "sensitivity_analysis": {
+      "variants": [
+        "instance_weighted"
+      ],
+      "configs": [
+        "F"
+      ],
+      "level": "algorithm (example-dependent training only)",
+      "objective": "TRAINS on C_FN = R * s_i; THRESHOLDED and SCORED on C_FN = R",
+      "description": "Instance/severity weighting. NOT a directly equivalent implementation of the class-constant objective that D and G use: it optimises a different loss from the one it is judged on, and since E[s_i] ~ 0.5 it carries roughly half D's effective positive weight. Its result is evidence about this variant under the common evaluation objective, and is NOT a standalone verdict on severity weighting. See docs/config_f_cost_objectives.md."
+    }
+  },
+  "threshold_protocol": {
+    "order": "TRAIN -> FIT -> VALIDATION -> SELECT -> LOCK -> TEST -> REPORT",
+    "rules": [
+      "fixed",
+      "youden",
+      "ner_optimal"
+    ],
+    "selected_on": "val",
+    "applied_to": "test",
+    "implementation": "evaluate.select_threshold",
+    "note": "At R = N_neg/N_pos the Youden and NER-optimal thresholds are the same number for every model -- a theorem, not a coincidence. Configs B and C are one condition at the default R, giving six distinct conditions rather than seven."
+  },
+  "metrics": {
+    "primary_ranking": "pr_auc",
+    "primary_decision_risk": "ner",
+    "also_reported": [
+      "precision",
+      "recall",
+      "f1",
+      "mcc",
+      "fp",
+      "fn",
+      "n_flagged",
+      "alert_rate",
+      "brier",
+      "roc_auc"
+    ],
+    "excluded": {
+      "accuracy": "Never computed. At 0.129% prevalence a constant-negative predictor scores 0.9987, so it cannot discriminate between models."
+    },
+    "roc_auc_caveat": "Reported for comparability with the prior work only. Near-insensitive to false positives at this imbalance; not used to rank models.",
+    "uncertainty": {
+      "procedure": "paired stratified bootstrap of the delta on shared resamples",
+      "n_boot": 2000,
+      "implementation": "evaluate.paired_bootstrap_pr_auc / paired_bootstrap_delta",
+      "forbidden": "CI overlap must not be used as a significance decision. Non-overlap implies a difference; overlap does not imply its absence.",
+      "language": "Say 'the paired interval excludes zero'. Do not say 'statistically significant' unless a procedure supporting that phrase was run."
+    }
+  },
+  "required_experiment_fields": [
+    "learner",
+    "feature_set",
+    "csl_variant",
+    "R_train",
+    "R_eval",
+    "threshold_rule",
+    "threshold",
+    "model_seed",
+    "split_seed",
+    "split_strategy",
+    "split",
+    "val_prevalence",
+    "test_prevalence"
+  ],
+  "required_metric_fields": [
+    "pr_auc",
+    "ner",
+    "precision",
+    "recall",
+    "f1",
+    "mcc",
+    "fp",
+    "fn",
+    "n_flagged",
+    "alert_rate"
+  ],
+  "supported_conclusions": [
+    {
+      "claim": "PaySim contains highly recoverable simulator-specific fraud signatures.",
+      "evidence": "results/02_rule_recoverability.csv -- three clauses reach precision 0.99988, recall 0.97699"
+    },
+    {
+      "claim": "errorBalanceOrig is unsuitable as an unrestricted feature: its predictive strength is tied to simulator bookkeeping.",
+      "evidence": "results/02_single_feature_auc.csv (0.9020 alone); results/02_drain_signature.csv (median gap exactly 0.0 for fraud)"
+    },
+    {
+      "claim": "The main experiments therefore use no_origin_balance.",
+      "evidence": "results/03_experimental_rung_v2.json -- validation-selected, criterion unchanged"
+    },
+    {
+      "claim": "CSL methods show consistently negative PR-AUC deltas against the unweighted baseline.",
+      "evidence": "results/04_h1_paired_bootstrap.csv -- 12 of 12 negative, every paired CI excluding zero, n_boot 2000"
+    },
+    {
+      "claim": "The effect of CSL on NER is learner- and cost-dependent.",
+      "evidence": "results/06_decision_cost_sweep.csv -- CSL-trained models reach lower NER in 17 of 36 cells; note R_train is fixed at 773.70 throughout, so this varies the decision cost only"
+    },
+    {
+      "claim": "Threshold optimisation produces substantial risk reductions relative to a fixed 0.5 threshold.",
+      "evidence": "results/06_threshold_markers.csv -- e.g. logistic regression 0.6591 -> 0.2499, XGBoost 0.2590 -> 0.1314"
+    },
+    {
+      "claim": "Evaluation prevalence has a major effect on precision.",
+      "evidence": "results/05_precision_collapse.csv; see results/05_arm_interpretation.json for what the arms do and do not isolate -- the A-to-B contrast does not vary prevalence alone"
+    },
+    {
+      "claim": "Temporal generalisation is harder for 3 of 4 learners.",
+      "evidence": "results/09_temporal_correction.csv -- on the repaired split (69.68/15.30/15.02); the superseded split showed the opposite through a base-rate artefact"
+    },
+    {
+      "claim": "PaySim cannot empirically answer the authentication-vulnerability research question, because those variables do not exist in it.",
+      "evidence": "constants.RAW_COLUMNS -- no session, device, SIM, PIN, channel or location field"
+    }
+  ],
+  "forbidden_claims": [
+    "The feature set is simulator-independent or artefact-free. The supportable phrase is 'reduced simulator artefact exposure'.",
+    "The existing configuration F result does NOT support the claim that severity weighting does not work. Training and evaluation use different cost objectives, so the comparison cannot settle that question in either direction. A dedicated example-dependent experiment would be required.",
+    "CSL never helps. Its effect on end-to-end risk is learner- and cost-dependent; only the ranking-quality result is uniformly negative.",
+    "The decision-cost sweep shows CSL winning at a given training cost ratio. Every CSL model in it was trained at R_train = 773.70.",
+    "Evaluation prevalence alone accounts for the precision collapse. The notebook 05 arms also differ in syntheticness, ENN cleaning and train/test contamination.",
+    "Any CSL delta is stable across seeds or splits. Every one rests on a single model seed and a single split seed."
+  ],
+  "provenance": {
+    "git_commit": "b2e6f6243676544cb68b25aac83ba18d5eb139e5",
+    "git_branch": "experiment-suite",
+    "git_dirty": true,
+    "environment": "results/experiment_environment.json",
+    "experiment_index": "results/experiment_index.json",
+    "change_log": "results/methodology_change_log.json"
+  },
+  "human_readable": "docs/frozen_baseline_protocol.md",
+  "consistency_checks": {
+    "verdict": "PASS",
+    "n_passed": 9,
+    "n_checks": 9,
+    "artifact": "results/frozen_baseline_checks.json"
+  },
+  "guards": {
+    "superseded_artifacts": "baseline.load_results refuses status SUPERSEDED",
+    "diagnostic_rungs": "experiment.choose_rung excludes them by default",
+    "frozen_rung": "baseline.assert_frozen_rung raises on any other rung",
+    "experiment_schema": "baseline.validate_experiment_frame"
+  },
+  "unfreezing": "Changing anything in this manifest requires a new entry in docs/methodology_change_log.md stating what changed, why, whether it was decided before or after seeing downstream results, and which experiments are affected. A better score is not a reason."
+}

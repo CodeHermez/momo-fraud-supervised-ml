@@ -1,0 +1,361 @@
+{
+  "verdict": "PASS",
+  "n_passed": 9,
+  "n_checks": 9,
+  "frozen_rung": "no_origin_balance",
+  "checks": [
+    {
+      "check": "notebooks_load_frozen_rung",
+      "status": "PASS",
+      "detail": "all 6 experiment notebooks resolve the rung through experiment.load_experimental_rung, which returns 'no_origin_balance' (selected on val)",
+      "evidence": [
+        {
+          "notebook": "04_cost_sensitive",
+          "loads_rung": true
+        },
+        {
+          "notebook": "06_risk_analysis",
+          "loads_rung": true
+        },
+        {
+          "notebook": "07_interpretability",
+          "loads_rung": true
+        },
+        {
+          "notebook": "08_model_export",
+          "loads_rung": true
+        },
+        {
+          "notebook": "09_velocity_features",
+          "loads_rung": true
+        },
+        {
+          "notebook": "10_advanced_optimization",
+          "loads_rung": true
+        },
+        {
+          "producer": "03_baselines",
+          "writes": "03_experimental_rung_v2.json"
+        }
+      ]
+    },
+    {
+      "check": "no_rung_override",
+      "status": "PASS",
+      "detail": "no notebook hard-codes a rung name or passes a rung literal as feature_set",
+      "evidence": []
+    },
+    {
+      "check": "single_split_across_experiments",
+      "status": "PASS",
+      "detail": "every main experiment calls stratified_split with the default seed=42, giving identical partitions",
+      "evidence": [
+        {
+          "notebook": "04_cost_sensitive",
+          "call": "stratified_split(y)"
+        },
+        {
+          "notebook": "07_interpretability",
+          "call": "stratified_split(y)"
+        },
+        {
+          "notebook": "08_model_export",
+          "call": "stratified_split(y)"
+        },
+        {
+          "notebook": "09_velocity_features",
+          "call": "stratified_split(y)"
+        },
+        {
+          "notebook": "10_advanced_optimization",
+          "call": "stratified_split(y)"
+        },
+        {
+          "notebook": "03_baselines",
+          "call": "stratified_split(y)"
+        },
+        {
+          "note": "temporal split is a separate declared arm",
+          "notebook": "09_velocity_features",
+          "uses_temporal": true
+        }
+      ]
+    },
+    {
+      "check": "no_test_based_selection",
+      "status": "PASS",
+      "detail": "headroom_by_rung and select_best_config both default to split='val', and no notebook selects by idxmin/nsmallest over test rows",
+      "evidence": []
+    },
+    {
+      "check": "threshold_never_selected_on_test",
+      "status": "PASS",
+      "detail": "all 13 threshold-selection call sites take validation labels",
+      "evidence": [
+        {
+          "file": "notebooks/06_risk_analysis.ipynb",
+          "call": "chosen = E.select_threshold(val[\"y_true\"], val[\"score\"], rule, R)"
+        },
+        {
+          "file": "notebooks/06_risk_analysis.ipynb",
+          "call": "chosen = RK.optimal_threshold(val[\"y_true\"], val[\"score\"], r)"
+        },
+        {
+          "file": "notebooks/06_risk_analysis.ipynb",
+          "call": "chosen = RK.optimal_threshold(val[\"y_true\"], val[\"score\"], R, sev_val)"
+        },
+        {
+          "file": "notebooks/08_model_export.ipynb",
+          "call": "chosen = RK.optimal_threshold(y[split.val], val_scores, R)"
+        },
+        {
+          "file": "notebooks/10_advanced_optimization.ipynb",
+          "call": "chosen = E.select_threshold(y_val, tuned_val_scores, \"ner_optimal\", R)"
+        },
+        {
+          "file": "notebooks/10_advanced_optimization.ipynb",
+          "call": "chosen = E.select_threshold(y_val, lgbm_val_scores, \"ner_optimal\", R)"
+        },
+        {
+          "file": "notebooks/10_advanced_optimization.ipynb",
+          "call": "chosen = E.select_threshold(y_val, stack_val_scores, \"ner_optimal\", R)"
+        },
+        {
+          "file": "scripts\\repairs\\repair_01_temporal_split.py",
+          "call": "chosen = E.select_threshold(labels[\"val\"], fit.val_scores, \"ner_optimal\", r)"
+        },
+        {
+          "file": "scripts\\repairs\\repair_09_destination_diagnostic.py",
+          "call": "chosen = E.select_threshold(labels[\"val\"], fit.val_scores, \"ner_optimal\", R)"
+        },
+        {
+          "file": "src\\momo_fraud\\evaluate.py",
+          "call": "t = R.youden_threshold(y_true, scores)"
+        },
+        {
+          "file": "src\\momo_fraud\\evaluate.py",
+          "call": "return R.optimal_threshold(y_true, scores, r, severity)"
+        },
+        {
+          "file": "src\\momo_fraud\\experiment.py",
+          "call": "chosen = E.select_threshold(y_val, fit.val_scores, rule, r)"
+        },
+        {
+          "file": "src\\momo_fraud\\risk.py",
+          "call": "per-instance severity is in play -- see ``optimal_threshold(severity=...)``."
+        }
+      ]
+    },
+    {
+      "check": "test_scores_never_feed_selection",
+      "status": "PASS",
+      "detail": "evaluate_configs calls select_threshold with ['y_val', 'fit.val_scores']; the test vector is scored at fit time for caching but never reaches a selection call",
+      "evidence": [
+        {
+          "call": "E.select_threshold(y_val, fit.val_scores, rule, r)"
+        }
+      ]
+    },
+    {
+      "check": "r_train_r_eval_explicit",
+      "status": "PASS",
+      "detail": "R_train and R_eval are both required by baseline.REQUIRED_EXPERIMENT_FIELDS, enforced by baseline.validate_experiment_frame for all future experiments",
+      "evidence": [
+        {
+          "artifact": "03_baselines_all_rungs",
+          "cost_columns_present": [
+            "R"
+          ]
+        },
+        {
+          "artifact": "04_best_config_per_learner",
+          "cost_columns_present": []
+        },
+        {
+          "artifact": "04_best_config_per_learner_v2",
+          "cost_columns_present": []
+        },
+        {
+          "artifact": "04_cost_sensitive",
+          "cost_columns_present": [
+            "R"
+          ]
+        },
+        {
+          "artifact": "04_h1_pr_auc_ci",
+          "cost_columns_present": []
+        },
+        {
+          "artifact": "05_replication_arms",
+          "cost_columns_present": [
+            "R"
+          ]
+        },
+        {
+          "artifact": "06_decision_cost_sweep",
+          "cost_columns_present": [
+            "R_train"
+          ]
+        },
+        {
+          "artifact": "06_per_transaction_threshold",
+          "cost_columns_present": []
+        },
+        {
+          "artifact": "06_r_sweep",
+          "cost_columns_present": [
+            "R"
+          ]
+        },
+        {
+          "artifact": "06_threshold_markers",
+          "cost_columns_present": []
+        },
+        {
+          "artifact": "09_destination_ablation",
+          "cost_columns_present": [
+            "R"
+          ]
+        },
+        {
+          "artifact": "09_split_strategy_comparison",
+          "cost_columns_present": [
+            "R"
+          ]
+        },
+        {
+          "artifact": "09_temporal_repaired",
+          "cost_columns_present": [
+            "R"
+          ]
+        },
+        {
+          "artifact": "09_velocity_vs_baseline",
+          "cost_columns_present": []
+        },
+        {
+          "artifact": "10_failed_runs",
+          "cost_columns_present": []
+        },
+        {
+          "artifact": "10_learner_comparison",
+          "cost_columns_present": []
+        },
+        {
+          "artifact": "10_stacking_results",
+          "cost_columns_present": []
+        },
+        {
+          "artifact": "10_summary",
+          "cost_columns_present": []
+        },
+        {
+          "artifact": "10_summary_v2",
+          "cost_columns_present": []
+        }
+      ]
+    },
+    {
+      "check": "seed_recorded",
+      "status": "PASS",
+      "detail": "model_seed and split_seed are required for all future experiments; 15 existing derived artifacts carry no seed column and inherit it from results/experiment_environment.json",
+      "evidence": [
+        {
+          "artifact": "04_best_config_per_learner",
+          "seed_column": false
+        },
+        {
+          "artifact": "04_best_config_per_learner_v2",
+          "seed_column": false
+        },
+        {
+          "artifact": "04_h1_pr_auc_ci",
+          "seed_column": false
+        },
+        {
+          "artifact": "05_replication_arms",
+          "seed_column": false
+        },
+        {
+          "artifact": "06_decision_cost_sweep",
+          "seed_column": false
+        },
+        {
+          "artifact": "06_per_transaction_threshold",
+          "seed_column": false
+        },
+        {
+          "artifact": "06_r_sweep",
+          "seed_column": false
+        },
+        {
+          "artifact": "06_threshold_markers",
+          "seed_column": false
+        },
+        {
+          "artifact": "09_split_strategy_comparison",
+          "seed_column": false
+        },
+        {
+          "artifact": "09_velocity_vs_baseline",
+          "seed_column": false
+        },
+        {
+          "artifact": "10_failed_runs",
+          "seed_column": false
+        },
+        {
+          "artifact": "10_learner_comparison",
+          "seed_column": false
+        },
+        {
+          "artifact": "10_stacking_results",
+          "seed_column": false
+        },
+        {
+          "artifact": "10_summary",
+          "seed_column": false
+        },
+        {
+          "artifact": "10_summary_v2",
+          "seed_column": false
+        }
+      ]
+    },
+    {
+      "check": "superseded_cannot_load_as_current",
+      "status": "PASS",
+      "detail": "baseline.load_results refuses all 7 superseded CSV artifacts and still permits deliberate access via allow_superseded=True",
+      "evidence": [
+        {
+          "artifact": "03_ladder_headroom",
+          "refused": true
+        },
+        {
+          "artifact": "04_h1_pr_auc_ci",
+          "refused": true
+        },
+        {
+          "artifact": "04_h1_verdict",
+          "refused": true
+        },
+        {
+          "artifact": "04_best_config_per_learner",
+          "refused": true
+        },
+        {
+          "artifact": "06_r_sweep",
+          "refused": true
+        },
+        {
+          "artifact": "09_velocity_vs_baseline",
+          "refused": true
+        },
+        {
+          "artifact": "10_summary",
+          "refused": true
+        }
+      ]
+    }
+  ]
+}
