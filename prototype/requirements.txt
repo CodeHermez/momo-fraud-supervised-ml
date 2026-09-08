@@ -1,0 +1,37 @@
+# Runtime dependencies for the prototype alone, used by the Dockerfile.
+#
+# The root requirements.txt is the research environment: it also carries
+# JupyterLab, LightGBM, imbalanced-learn and the Kaggle client, none of which
+# inference touches. Installing it into the image cost about 700 MB for
+# packages the demo never imports.
+#
+# Versions are pinned to the same values as the root file so the container
+# scores identically to the notebooks. Only the XGBoost distribution differs;
+# see the note below.
+
+numpy==2.4.4
+pandas==3.0.2
+pyarrow==24.0.0
+scikit-learn==1.8.0
+scipy==1.16.3
+joblib==1.5.2
+
+# Same 3.4.0 build without the bundled CUDA libraries, which are 288 MB of the
+# image and unreachable here — the prototype only predicts, on CPU. The import
+# name is still `xgboost` and the model.json bundle loads unchanged.
+xgboost-cpu==3.4.0
+
+# The SHAP explanation panel on pages 1 and 5. Brings numba/llvmlite.
+shap==0.52.0
+
+# Not used by any prototype page directly: `momo_fraud/__init__.py` imports
+# `viz`, which imports both at module scope, so `from momo_fraud import ...`
+# fails without them.
+matplotlib==3.10.9
+seaborn==0.13.2
+
+streamlit==1.62.0
+
+# Kept so the suite can be run inside the container as a smoke test:
+#   docker exec <container> python -m pytest prototype/tests -q
+pytest==9.0.1
