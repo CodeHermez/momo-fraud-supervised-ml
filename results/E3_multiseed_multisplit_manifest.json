@@ -1,0 +1,100 @@
+{
+  "experiment_id": "E3_multiseed_multisplit",
+  "status": "COMPLETE",
+  "frozen_baseline_sha": "b2e6f624",
+  "frozen_baseline_manifest": "results/frozen_experimental_baseline.json",
+  "feature_set": "no_origin_balance",
+  "split_strategy": "stratified 70/15/15",
+  "split_seeds": [
+    42,
+    123,
+    456,
+    789
+  ],
+  "model_seeds": [
+    42,
+    123,
+    456,
+    789
+  ],
+  "learners": [
+    "decision_tree",
+    "logistic_regression",
+    "random_forest",
+    "xgboost"
+  ],
+  "fit_variants": [
+    "instance_weighted",
+    "rus",
+    "unweighted",
+    "weighted"
+  ],
+  "configurations": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G"
+  ],
+  "cost": {
+    "C_FP": 1.0,
+    "R_train_csl": 773.7010836478753,
+    "R_train_unweighted": 1.0,
+    "R_eval": 773.7010836478753,
+    "R_varied_in_E3": false
+  },
+  "threshold_protocol": {
+    "order": "TRAIN -> FIT -> VAL -> SELECT -> LOCK -> TEST -> REPORT",
+    "selected_on": "val",
+    "rules": [
+      "fixed",
+      "ner_optimal",
+      "youden"
+    ]
+  },
+  "metrics": {
+    "primary_ranking": "pr_auc",
+    "primary_decision_risk": "ner",
+    "accuracy_computed": false
+  },
+  "uncertainty_sources_reported_separately": [
+    "test_observation (paired bootstrap within one fixed cell)",
+    "training_seed (across model seeds at fixed split)",
+    "split (across split seeds)"
+  ],
+  "deterministic_cells": {
+    "learner": "logistic_regression",
+    "variants": [
+      "unweighted",
+      "weighted",
+      "instance_weighted"
+    ],
+    "reason": "lbfgs does not consume random_state; std_pr_auc is exactly 0.0 across four seeds on the full training set",
+    "omitted_fits": 36,
+    "omitted_are": "deterministic duplicates, not missing observations",
+    "training_seed_variance": 0.0
+  },
+  "config_f": {
+    "variant": "instance_weighted",
+    "role": "sensitivity analysis",
+    "not_merged_into_core_comparison": true,
+    "objective_mismatch": "trains on C_FN = R * s_i; thresholded and scored on C_FN = R"
+  },
+  "n_cells_planned": 220,
+  "n_cells_completed": 220,
+  "execution_timestamp_utc": "2026-08-27T21:47:10+00:00",
+  "git_sha": "b2e6f6243676544cb68b25aac83ba18d5eb139e5",
+  "python_version": "3.14.4",
+  "artifacts": [
+    "results/E3_runs.csv",
+    "results/E3_split_prevalence.csv",
+    "results/E3_robustness_summary.csv",
+    "results/E3_variance_decomposition.csv",
+    "results/E3_paired_deltas.csv",
+    "results/E3_delta_summary.csv",
+    "results/E3_test_observation_bootstrap.csv",
+    "results/E3_qc.json"
+  ]
+}

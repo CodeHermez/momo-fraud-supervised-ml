@@ -1,0 +1,87 @@
+{
+  "experiment_id": "E3_multiseed_multisplit",
+  "smoke_cell": "xgboost__rus__split123__model456",
+  "verdict": "PASS",
+  "checks": [
+    {
+      "check": "feature rung is no_origin_balance",
+      "status": "PASS",
+      "detail": "no_origin_balance"
+    },
+    {
+      "check": "split seed correct",
+      "status": "PASS",
+      "detail": "123"
+    },
+    {
+      "check": "model seed correct",
+      "status": "PASS",
+      "detail": "456"
+    },
+    {
+      "check": "split proportions 70/15/15",
+      "status": "PASS",
+      "detail": "0.7000 / 0.1500 / 0.1500"
+    },
+    {
+      "check": "preprocessing fitted on training rows only",
+      "status": "PASS",
+      "detail": "cutoff 1,618,533.25 == train p99"
+    },
+    {
+      "check": "resampling applied to training rows only",
+      "status": "PASS",
+      "detail": "n_train 11,498 of 4,453,834 training rows"
+    },
+    {
+      "check": "threshold selected on validation only",
+      "status": "PASS",
+      "detail": "0.6055159"
+    },
+    {
+      "check": "locked threshold differs from a test-selected one",
+      "status": "PASS",
+      "detail": "test-optimal would be 0.55955625 -- not used"
+    },
+    {
+      "check": "R_train explicit",
+      "status": "PASS",
+      "detail": "773.7011"
+    },
+    {
+      "check": "R_eval explicit",
+      "status": "PASS",
+      "detail": "773.7011"
+    },
+    {
+      "check": "R_train and R_eval recorded independently",
+      "status": "PASS",
+      "detail": "both columns present"
+    },
+    {
+      "check": "PR-AUC reproduces from cached predictions",
+      "status": "PASS",
+      "detail": "0.768581"
+    },
+    {
+      "check": "NER reproduces from cached predictions",
+      "status": "PASS",
+      "detail": "0.112738"
+    },
+    {
+      "check": "confusion counts reproduce",
+      "status": "PASS",
+      "detail": "fp 31639, fn 98"
+    },
+    {
+      "check": "artifact provenance complete",
+      "status": "PASS",
+      "detail": "all required fields present"
+    },
+    {
+      "check": "frozen baseline artifacts unchanged",
+      "status": "PASS",
+      "detail": "sha256 match"
+    }
+  ]
+}

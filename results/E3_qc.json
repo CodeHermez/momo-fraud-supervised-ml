@@ -1,0 +1,117 @@
+{
+  "experiment_id": "E3_multiseed_multisplit",
+  "verdict": "PASS",
+  "n_cells": 220,
+  "checks": [
+    {
+      "check": "every result uses the frozen rung",
+      "status": "PASS",
+      "detail": "no_origin_balance"
+    },
+    {
+      "check": "no diagnostic rung entered the experiment",
+      "status": "PASS",
+      "detail": "diagnostic rungs: ['no_balance_state']"
+    },
+    {
+      "check": "split seeds are exactly the pre-declared values",
+      "status": "PASS",
+      "detail": "[np.int64(42), np.int64(123), np.int64(456), np.int64(789)]"
+    },
+    {
+      "check": "model seeds are within the pre-declared values",
+      "status": "PASS",
+      "detail": "[np.int64(42), np.int64(123), np.int64(456), np.int64(789)]"
+    },
+    {
+      "check": "every required cell exists",
+      "status": "PASS",
+      "detail": "220/220 present"
+    },
+    {
+      "check": "no unplanned cell present",
+      "status": "PASS",
+      "detail": "0 unplanned"
+    },
+    {
+      "check": "all thresholds validation-selected",
+      "status": "PASS",
+      "detail": "val"
+    },
+    {
+      "check": "R_train present on every row",
+      "status": "PASS",
+      "detail": "values [np.float64(1.0), np.float64(773.7010836478753)]"
+    },
+    {
+      "check": "R_eval present and equal to the frozen default",
+      "status": "PASS",
+      "detail": "773.7011"
+    },
+    {
+      "check": "R not varied in E3",
+      "status": "PASS",
+      "detail": "1 distinct R_eval"
+    },
+    {
+      "check": "seed provenance present on every row",
+      "status": "PASS",
+      "detail": "complete"
+    },
+    {
+      "check": "git SHA recorded on every row",
+      "status": "PASS",
+      "detail": "b2e6f624"
+    },
+    {
+      "check": "timestamp recorded on every row",
+      "status": "PASS",
+      "detail": "present"
+    },
+    {
+      "check": "accuracy never computed",
+      "status": "PASS",
+      "detail": "absent"
+    },
+    {
+      "check": "all paired comparisons matched on split seed",
+      "status": "PASS",
+      "detail": "same test rows"
+    },
+    {
+      "check": "paired comparisons matched on model seed or deterministic",
+      "status": "PASS",
+      "detail": "156 exact, 12 via determinism"
+    },
+    {
+      "check": "every arm uses the NER-optimal threshold rule",
+      "status": "PASS",
+      "detail": "['ner_optimal']"
+    },
+    {
+      "check": "one config per variant in the summaries",
+      "status": "PASS",
+      "detail": "{'instance_weighted': 'F', 'rus': 'G', 'unweighted': 'C', 'weighted': 'E'}"
+    },
+    {
+      "check": "config F kept out of the core arm",
+      "status": "PASS",
+      "detail": "['rus', 'weighted']"
+    },
+    {
+      "check": "schema validation passes on the full frame",
+      "status": "PASS",
+      "detail": "all required fields present"
+    },
+    {
+      "check": "frozen baseline fingerprint recorded",
+      "status": "PASS",
+      "detail": "baseline stored"
+    },
+    {
+      "check": "locked threshold identical on val and test",
+      "status": "PASS",
+      "detail": "376 cell-configs"
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "experiment_id": "E2_training_cost_sweep",
+  "verdict": "PASS",
+  "n_new_cells": 260,
+  "checks": [
+    {
+      "check": "all required R_train values represented",
+      "status": "PASS",
+      "detail": "[np.float64(1.0), np.float64(10.0), np.float64(50.0), np.float64(100.0), np.float64(773.7), np.float64(2000.0), np.float64(5000.0)]"
+    },
+    {
+      "check": "R_eval fixed at the frozen default",
+      "status": "PASS",
+      "detail": "773.7011, 1 distinct value"
+    },
+    {
+      "check": "each R_train reached the training estimator",
+      "status": "PASS",
+      "detail": "520/520 rows verified on the fitted estimator"
+    },
+    {
+      "check": "estimator weight equals the requested R_train",
+      "status": "PASS",
+      "detail": "exact match"
+    },
+    {
+      "check": "no R value selected adaptively",
+      "status": "PASS",
+      "detail": "grid is pre-declared and closed"
+    },
+    {
+      "check": "every required cell exists",
+      "status": "PASS",
+      "detail": "260/260 present"
+    },
+    {
+      "check": "no unplanned cell present",
+      "status": "PASS",
+      "detail": "0 unplanned"
+    },
+    {
+      "check": "all thresholds validation-selected",
+      "status": "PASS",
+      "detail": "val"
+    },
+    {
+      "check": "threshold re-selected per cell (not carried across R)",
+      "status": "PASS",
+      "detail": "distinct thresholds per learner across R"
+    },
+    {
+      "check": "feature set remains the frozen rung",
+      "status": "PASS",
+      "detail": "no_origin_balance"
+    },
+    {
+      "check": "no diagnostic rung present",
+      "status": "PASS",
+      "detail": "none"
+    },
+    {
+      "check": "all split seeds represented",
+      "status": "PASS",
+      "detail": "[np.int64(42), np.int64(123), np.int64(456), np.int64(789)]"
+    },
+    {
+      "check": "model seeds within the pre-declared set",
+      "status": "PASS",
+      "detail": "[np.int64(42), np.int64(123), np.int64(456), np.int64(789)]"
+    },
+    {
+      "check": "provenance complete on new cells",
+      "status": "PASS",
+      "detail": "complete"
+    },
+    {
+      "check": "accuracy never computed",
+      "status": "PASS",
+      "detail": "absent"
+    },
+    {
+      "check": "paired comparisons share test observations",
+      "status": "PASS",
+      "detail": "matched on split seed"
+    },
+    {
+      "check": "paired comparisons matched on seed or deterministic",
+      "status": "PASS",
+      "detail": "624 exact, 0 via determinism"
+    },
+    {
+      "check": "both reference conditions present",
+      "status": "PASS",
+      "detail": "['default', 'unweighted']"
+    },
+    {
+      "check": "RUS absent from the sweep",
+      "status": "PASS",
+      "detail": "class weighting and unweighted only"
+    },
+    {
+      "check": "schema validation passes",
+      "status": "PASS",
+      "detail": "all required fields present"
+    },
+    {
+      "check": "frozen fingerprint recorded",
+      "status": "PASS",
+      "detail": "baseline stored"
+    }
+  ]
+}

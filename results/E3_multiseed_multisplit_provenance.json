@@ -1,0 +1,98 @@
+{
+  "experiment": "E3_multiseed_multisplit",
+  "recorded_utc": "2026-08-27T21:47:10+00:00",
+  "git": {
+    "commit": "b2e6f6243676544cb68b25aac83ba18d5eb139e5",
+    "branch": "experiment-suite",
+    "dirty": true
+  },
+  "environment": {
+    "python_version": "3.14.4",
+    "python_implementation": "CPython",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "numpy": "2.4.4",
+      "pandas": "3.0.2",
+      "pyarrow": "24.0.0",
+      "scikit-learn": "1.8.0",
+      "xgboost": "3.4.0",
+      "lightgbm": "4.7.0",
+      "imbalanced-learn": "0.14.2",
+      "shap": "0.52.0",
+      "scipy": "1.16.3",
+      "matplotlib": "3.10.9",
+      "seaborn": "0.13.2"
+    }
+  },
+  "dataset": {
+    "dataset": "ealaxi/paysim1",
+    "csv_sha256": "16910f90577b0d981bf8ff289714510bb89bc71bff7d3f220f024e287e4eea6b",
+    "n_transactions": 6362620,
+    "n_fraud": 8213,
+    "n_legitimate": 6354407,
+    "prevalence": 0.001290820448180152,
+    "imbalance_ratio": 773.7010836478753,
+    "n_steps": 743,
+    "n_days": 30.958333333333332
+  },
+  "seed": 42,
+  "split": {
+    "strategy": "stratified",
+    "seeds": [
+      42,
+      123,
+      456,
+      789
+    ]
+  },
+  "model": {
+    "learners": [
+      "decision_tree",
+      "logistic_regression",
+      "random_forest",
+      "xgboost"
+    ],
+    "model_seeds": [
+      42,
+      123,
+      456,
+      789
+    ]
+  },
+  "csl": {
+    "variants": [
+      "instance_weighted",
+      "rus",
+      "unweighted",
+      "weighted"
+    ],
+    "taxonomy": [
+      "baseline",
+      "algorithm_and_data_level",
+      "decision_level",
+      "sensitivity_analysis"
+    ]
+  },
+  "cost_ratio": {
+    "C_FP": 1.0,
+    "R_train_csl": 773.7010836478753,
+    "R_train_unweighted": 1.0,
+    "R_eval": 773.7010836478753,
+    "R_varied_in_E3": false
+  },
+  "thresholds": {
+    "order": "TRAIN -> FIT -> VAL -> SELECT -> LOCK -> TEST -> REPORT",
+    "selected_on": "val",
+    "rules": [
+      "fixed",
+      "ner_optimal",
+      "youden"
+    ]
+  },
+  "evaluation": {
+    "primary_ranking": "pr_auc",
+    "primary_decision_risk": "ner",
+    "accuracy_computed": false
+  },
+  "notes": "Robustness experiment. No tuning, no feature selection, R not varied."
+}

@@ -1,0 +1,17 @@
+learner,variant,deterministic_in_model_seed,max_abs_diff
+logistic_regression,unweighted,True,0.0
+logistic_regression,weighted,True,0.0
+logistic_regression,instance_weighted,True,0.0
+logistic_regression,rus,False,0.9120777975767851
+decision_tree,unweighted,True,0.0
+decision_tree,weighted,False,0.00011235475540161133
+decision_tree,instance_weighted,False,0.00011616945266723633
+decision_tree,rus,False,0.8965517282485962
+random_forest,unweighted,False,0.1477183699607849
+random_forest,weighted,False,0.25906167924404144
+random_forest,instance_weighted,False,0.19761578738689423
+random_forest,rus,False,0.24218809604644775
+xgboost,unweighted,False,0.665827214717865
+xgboost,weighted,False,0.6829701513051987
+xgboost,instance_weighted,False,0.6725525408983231
+xgboost,rus,False,0.953636035323143

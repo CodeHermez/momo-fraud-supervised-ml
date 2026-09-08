@@ -1,0 +1,86 @@
+{
+  "experiment_id": "E2_training_cost_sweep",
+  "smoke_cell": "random_forest__weighted__R50__split456__model789",
+  "verdict": "PASS",
+  "r_train_requested": 50.0,
+  "r_train_in_estimator": 50.0,
+  "r_train_parameter": "class_weight[1]",
+  "max_score_difference_vs_default_R": 0.5414798259735107,
+  "checks": [
+    {
+      "check": "R_train is non-default",
+      "status": "PASS",
+      "detail": "50 vs default 773.7011"
+    },
+    {
+      "check": "R_eval fixed at the frozen default",
+      "status": "PASS",
+      "detail": "773.7011"
+    },
+    {
+      "check": "R_train and R_eval recorded independently",
+      "status": "PASS",
+      "detail": "R_train 50, R_eval 773.7011"
+    },
+    {
+      "check": "requested R_train reached the fitted estimator",
+      "status": "PASS",
+      "detail": "class_weight[1] = 50 (requested 50)"
+    },
+    {
+      "check": "different R_train produces a different fitted model",
+      "status": "PASS",
+      "detail": "max|score difference| vs R=773.70 = 0.5415"
+    },
+    {
+      "check": "the comparison model carried the default weight",
+      "status": "PASS",
+      "detail": "class_weight[1] = 773.7011"
+    },
+    {
+      "check": "correct frozen feature set",
+      "status": "PASS",
+      "detail": "no_origin_balance"
+    },
+    {
+      "check": "correct split seed",
+      "status": "PASS",
+      "detail": "456"
+    },
+    {
+      "check": "correct model seed",
+      "status": "PASS",
+      "detail": "789"
+    },
+    {
+      "check": "split proportions 70/15/15",
+      "status": "PASS",
+      "detail": "0.7000 / 0.1500 / 0.1500"
+    },
+    {
+      "check": "threshold selected on validation only, at R_eval",
+      "status": "PASS",
+      "detail": "0.034762856"
+    },
+    {
+      "check": "locked threshold is not the test-optimal one",
+      "status": "PASS",
+      "detail": "test-optimal would be 0.04530504 -- not used"
+    },
+    {
+      "check": "metrics reproduce from cached predictions",
+      "status": "PASS",
+      "detail": "PR-AUC 0.810389, NER 0.116135"
+    },
+    {
+      "check": "provenance and schema complete",
+      "status": "PASS",
+      "detail": "all required fields present"
+    },
+    {
+      "check": "frozen baseline and E3 artifacts unchanged",
+      "status": "PASS",
+      "detail": "sha256 match"
+    }
+  ]
+}

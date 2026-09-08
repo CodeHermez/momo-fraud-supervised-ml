@@ -1,0 +1,66 @@
+[
+ {
+  "after_split_seed": 42,
+  "timestamp_utc": "2026-08-27T17:20:44+00:00",
+  "planned": 220,
+  "completed": 56,
+  "failed": 0,
+  "missing": 164,
+  "duplicate_cell_ids": [],
+  "corrupted_artifacts": [],
+  "frozen_baseline_fingerprint": {
+   "frozen_experimental_baseline.json": "3baef21edfa6a0d28a8a60daa84eae99b7bceb76e9d9d7cfe2272db7974d2719",
+   "frozen_baseline_checks.json": "c98a7e4993d06acadbe0e2fb0c9cc1d03cbf7cbc5715f5fc9ba8718b71079d04",
+   "03_experimental_rung_v2.json": "ae8792f8787d27ecd4df4f0e2bcc06f14951896eba3d1265c77884a1d8bdad8c",
+   "experiment_index.json": "19ae8c4c756a29b7c66a5bbf52c9d3f4b2f2c6cf7b625b175c2ac29f96b34d80"
+  }
+ },
+ {
+  "after_split_seed": 123,
+  "timestamp_utc": "2026-08-27T18:33:53+00:00",
+  "planned": 220,
+  "completed": 110,
+  "failed": 0,
+  "missing": 110,
+  "duplicate_cell_ids": [],
+  "corrupted_artifacts": [],
+  "frozen_baseline_fingerprint": {
+   "frozen_experimental_baseline.json": "3baef21edfa6a0d28a8a60daa84eae99b7bceb76e9d9d7cfe2272db7974d2719",
+   "frozen_baseline_checks.json": "c98a7e4993d06acadbe0e2fb0c9cc1d03cbf7cbc5715f5fc9ba8718b71079d04",
+   "03_experimental_rung_v2.json": "ae8792f8787d27ecd4df4f0e2bcc06f14951896eba3d1265c77884a1d8bdad8c",
+   "experiment_index.json": "19ae8c4c756a29b7c66a5bbf52c9d3f4b2f2c6cf7b625b175c2ac29f96b34d80"
+  }
+ },
+ {
+  "after_split_seed": 456,
+  "timestamp_utc": "2026-08-27T19:47:32+00:00",
+  "planned": 220,
+  "completed": 165,
+  "failed": 0,
+  "missing": 55,
+  "duplicate_cell_ids": [],
+  "corrupted_artifacts": [],
+  "frozen_baseline_fingerprint": {
+   "frozen_experimental_baseline.json": "3baef21edfa6a0d28a8a60daa84eae99b7bceb76e9d9d7cfe2272db7974d2719",
+   "frozen_baseline_checks.json": "c98a7e4993d06acadbe0e2fb0c9cc1d03cbf7cbc5715f5fc9ba8718b71079d04",
+   "03_experimental_rung_v2.json": "ae8792f8787d27ecd4df4f0e2bcc06f14951896eba3d1265c77884a1d8bdad8c",
+   "experiment_index.json": "19ae8c4c756a29b7c66a5bbf52c9d3f4b2f2c6cf7b625b175c2ac29f96b34d80"
+  }
+ },
+ {
+  "after_split_seed": 789,
+  "timestamp_utc": "2026-08-27T20:59:25+00:00",
+  "planned": 220,
+  "completed": 220,
+  "failed": 0,
+  "missing": 0,
+  "duplicate_cell_ids": [],
+  "corrupted_artifacts": [],
+  "frozen_baseline_fingerprint": {
+   "frozen_experimental_baseline.json": "3baef21edfa6a0d28a8a60daa84eae99b7bceb76e9d9d7cfe2272db7974d2719",
+   "frozen_baseline_checks.json": "c98a7e4993d06acadbe0e2fb0c9cc1d03cbf7cbc5715f5fc9ba8718b71079d04",
+   "03_experimental_rung_v2.json": "ae8792f8787d27ecd4df4f0e2bcc06f14951896eba3d1265c77884a1d8bdad8c",
+   "experiment_index.json": "19ae8c4c756a29b7c66a5bbf52c9d3f4b2f2c6cf7b625b175c2ac29f96b34d80"
+  }
+ }
+]

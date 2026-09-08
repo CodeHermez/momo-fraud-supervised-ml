@@ -1,0 +1,86 @@
+[
+ {
+  "after_split_seed": 42,
+  "timestamp_utc": "2026-08-28T10:40:28+00:00",
+  "planned": 260,
+  "completed": 66,
+  "failed": 0,
+  "retried": 0,
+  "missing": 194,
+  "duplicate_cell_ids": [],
+  "corrupted_artifacts": [],
+  "frozen_fingerprint": {
+   "frozen_experimental_baseline.json": "3baef21edfa6a0d28a8a60daa84eae99b7bceb76e9d9d7cfe2272db7974d2719",
+   "frozen_baseline_checks.json": "c98a7e4993d06acadbe0e2fb0c9cc1d03cbf7cbc5715f5fc9ba8718b71079d04",
+   "03_experimental_rung_v2.json": "ae8792f8787d27ecd4df4f0e2bcc06f14951896eba3d1265c77884a1d8bdad8c",
+   "experiment_index.json": "19ae8c4c756a29b7c66a5bbf52c9d3f4b2f2c6cf7b625b175c2ac29f96b34d80",
+   "E3_runs.csv": "cccb6e51cbcdc88847cf4b267508efbb57bdca4ea4f104ca1d66ed49caaa0d55",
+   "E3_delta_summary.csv": "cc941296c9f5a9f18028f57ec296c1ec636d32fa90b44f65118599c9a43892cf",
+   "E3_qc.json": "afc33ffb6770a1fa67a3927ae68fd3c7de9b387385d21dae348d3a55bdec41f9"
+  },
+  "failures": []
+ },
+ {
+  "after_split_seed": 123,
+  "timestamp_utc": "2026-08-28T14:37:13+00:00",
+  "planned": 260,
+  "completed": 131,
+  "failed": 0,
+  "retried": 0,
+  "missing": 129,
+  "duplicate_cell_ids": [],
+  "corrupted_artifacts": [],
+  "frozen_fingerprint": {
+   "frozen_experimental_baseline.json": "3baef21edfa6a0d28a8a60daa84eae99b7bceb76e9d9d7cfe2272db7974d2719",
+   "frozen_baseline_checks.json": "c98a7e4993d06acadbe0e2fb0c9cc1d03cbf7cbc5715f5fc9ba8718b71079d04",
+   "03_experimental_rung_v2.json": "ae8792f8787d27ecd4df4f0e2bcc06f14951896eba3d1265c77884a1d8bdad8c",
+   "experiment_index.json": "19ae8c4c756a29b7c66a5bbf52c9d3f4b2f2c6cf7b625b175c2ac29f96b34d80",
+   "E3_runs.csv": "cccb6e51cbcdc88847cf4b267508efbb57bdca4ea4f104ca1d66ed49caaa0d55",
+   "E3_delta_summary.csv": "cc941296c9f5a9f18028f57ec296c1ec636d32fa90b44f65118599c9a43892cf",
+   "E3_qc.json": "afc33ffb6770a1fa67a3927ae68fd3c7de9b387385d21dae348d3a55bdec41f9"
+  },
+  "failures": []
+ },
+ {
+  "after_split_seed": 456,
+  "timestamp_utc": "2026-08-28T16:51:22+00:00",
+  "planned": 260,
+  "completed": 195,
+  "failed": 0,
+  "retried": 0,
+  "missing": 65,
+  "duplicate_cell_ids": [],
+  "corrupted_artifacts": [],
+  "frozen_fingerprint": {
+   "frozen_experimental_baseline.json": "3baef21edfa6a0d28a8a60daa84eae99b7bceb76e9d9d7cfe2272db7974d2719",
+   "frozen_baseline_checks.json": "c98a7e4993d06acadbe0e2fb0c9cc1d03cbf7cbc5715f5fc9ba8718b71079d04",
+   "03_experimental_rung_v2.json": "ae8792f8787d27ecd4df4f0e2bcc06f14951896eba3d1265c77884a1d8bdad8c",
+   "experiment_index.json": "19ae8c4c756a29b7c66a5bbf52c9d3f4b2f2c6cf7b625b175c2ac29f96b34d80",
+   "E3_runs.csv": "cccb6e51cbcdc88847cf4b267508efbb57bdca4ea4f104ca1d66ed49caaa0d55",
+   "E3_delta_summary.csv": "cc941296c9f5a9f18028f57ec296c1ec636d32fa90b44f65118599c9a43892cf",
+   "E3_qc.json": "afc33ffb6770a1fa67a3927ae68fd3c7de9b387385d21dae348d3a55bdec41f9"
+  },
+  "failures": []
+ },
+ {
+  "after_split_seed": 789,
+  "timestamp_utc": "2026-08-28T19:07:57+00:00",
+  "planned": 260,
+  "completed": 260,
+  "failed": 0,
+  "retried": 0,
+  "missing": 0,
+  "duplicate_cell_ids": [],
+  "corrupted_artifacts": [],
+  "frozen_fingerprint": {
+   "frozen_experimental_baseline.json": "3baef21edfa6a0d28a8a60daa84eae99b7bceb76e9d9d7cfe2272db7974d2719",
+   "frozen_baseline_checks.json": "c98a7e4993d06acadbe0e2fb0c9cc1d03cbf7cbc5715f5fc9ba8718b71079d04",
+   "03_experimental_rung_v2.json": "ae8792f8787d27ecd4df4f0e2bcc06f14951896eba3d1265c77884a1d8bdad8c",
+   "experiment_index.json": "19ae8c4c756a29b7c66a5bbf52c9d3f4b2f2c6cf7b625b175c2ac29f96b34d80",
+   "E3_runs.csv": "cccb6e51cbcdc88847cf4b267508efbb57bdca4ea4f104ca1d66ed49caaa0d55",
+   "E3_delta_summary.csv": "cc941296c9f5a9f18028f57ec296c1ec636d32fa90b44f65118599c9a43892cf",
+   "E3_qc.json": "afc33ffb6770a1fa67a3927ae68fd3c7de9b387385d21dae348d3a55bdec41f9"
+  },
+  "failures": []
+ }
+]

@@ -1,0 +1,13 @@
+learner,csl_variant,split_seed,model_seed,uncertainty_source,delta,ci_low,ci_high,n_boot,n_crossing_zero,prop_crossing_zero,p_two_sided,excludes_zero
+logistic_regression,weighted,42,42,test_observation_only,-0.3517942373365792,-0.37319728927536217,-0.32927658837168045,2000,0,0.0,0.0,True
+logistic_regression,rus,42,42,test_observation_only,-0.3848424777726618,-0.4069226551397083,-0.3620465044076405,2000,0,0.0,0.0,True
+logistic_regression,instance_weighted,42,42,test_observation_only,-0.2650118325479058,-0.28550059107281567,-0.24362986101572592,2000,0,0.0,0.0,True
+decision_tree,weighted,42,42,test_observation_only,-0.019561558369193044,-0.030066261490986245,-0.008838299782046652,2000,0,0.0,0.0,True
+decision_tree,rus,42,42,test_observation_only,-0.5693149554765222,-0.5860753883228251,-0.55041960873094,2000,0,0.0,0.0,True
+decision_tree,instance_weighted,42,42,test_observation_only,-0.015941915138991014,-0.02578840035108757,-0.005674580305802397,2000,3,0.0015,0.003,True
+random_forest,weighted,42,42,test_observation_only,-0.05000642907816111,-0.06004033494425426,-0.04020892845960699,2000,0,0.0,0.0,True
+random_forest,rus,42,42,test_observation_only,-0.06768432748522424,-0.07936132054536457,-0.056766029200108994,2000,0,0.0,0.0,True
+random_forest,instance_weighted,42,42,test_observation_only,-0.04199602158294791,-0.05137504510041081,-0.03328933563126541,2000,0,0.0,0.0,True
+xgboost,weighted,42,42,test_observation_only,-0.019507764969224684,-0.025912027523547716,-0.013629721888672855,2000,0,0.0,0.0,True
+xgboost,rus,42,42,test_observation_only,-0.07558773631047788,-0.0871205971272342,-0.06374257456927059,2000,0,0.0,0.0,True
+xgboost,instance_weighted,42,42,test_observation_only,-0.019065634732828407,-0.025245231427585366,-0.01309749589984461,2000,0,0.0,0.0,True
