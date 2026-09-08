@@ -1,0 +1,42 @@
+{
+  "experiment_id": "E4_prevalence_manipulation",
+  "cell": "xgboost__weighted__split42__model42",
+  "verdict": "PASS",
+  "checks": [
+    {
+      "check": "fast AP equals sklearn on the full test set",
+      "status": "PASS",
+      "detail": "0.797749243280 vs 0.797749243280"
+    },
+    {
+      "check": "full-set PR-AUC equals the stored E3 value",
+      "status": "PASS",
+      "detail": "0.797749243280 vs 0.797749243280"
+    },
+    {
+      "check": "fast AP equals sklearn on a balanced subsample",
+      "status": "PASS",
+      "detail": "0.986785443180 vs 0.986785443180"
+    },
+    {
+      "check": "balanced subsample really is balanced",
+      "status": "PASS",
+      "detail": "prevalence 0.500000"
+    },
+    {
+      "check": "recall unchanged by subsampling",
+      "status": "PASS",
+      "detail": "0.874188311688 -> 0.874188311688"
+    },
+    {
+      "check": "every positive retained",
+      "status": "PASS",
+      "detail": "1232 of 1232"
+    },
+    {
+      "check": "precision rose while the model did not change",
+      "status": "PASS",
+      "detail": "0.0643 -> 0.9872"
+    }
+  ]
+}
