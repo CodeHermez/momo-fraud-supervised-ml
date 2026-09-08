@@ -261,8 +261,23 @@ def test_the_nine_frozen_conclusions_are_all_present():
 def test_forbidden_claims_cover_the_known_overstatements():
     joined = " ".join(B.FORBIDDEN_CLAIMS).lower()
     for topic in ("artefact-free", "severity weighting", "csl never helps",
-                  "r_train", "prevalence", "seeds or splits"):
+                  "r_train", "prevalence", "seeds or splits",
+                  "empirical security evaluation"):
         assert topic in joined
+
+
+def test_the_authentication_design_claim_is_bounded():
+    """RQ 2.1.1 is a design contribution; the guard must say so explicitly.
+
+    The failure mode this catches is the design ladder being cited as evidence
+    that step-up authentication works. See CHANGE-06 and
+    docs/authentication_design_contribution.md section D.
+    """
+    assert B.AUTH_DESIGN_FORBIDDEN_CLAIM in B.FORBIDDEN_CLAIMS
+    claim = B.AUTH_DESIGN_FORBIDDEN_CLAIM.lower()
+    assert "not an empirical security evaluation" in claim
+    assert "derived" in claim          # what may be said
+    assert "no control was tested" in claim   # what may not
 
 
 # --- the manifest -------------------------------------------------------------

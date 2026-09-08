@@ -152,6 +152,22 @@ CONFIG_F_FORBIDDEN_CLAIM = (
     "direction. A dedicated example-dependent experiment would be required."
 )
 
+#: Stated separately for the same reason: RQ 2.1.1 is answered as a *design*
+#: contribution (docs/authentication_design_contribution.md, CHANGE-06), and the
+#: band-to-step-up mapping is the sentence most likely to be promoted by
+#: accident from a design argument into a security result.
+AUTH_DESIGN_FORBIDDEN_CLAIM = (
+    "The risk-band to step-up authentication mapping is NOT an empirical "
+    "security evaluation. No control was tested: nothing here shows that a "
+    "biometric step-up prevents a vished transaction or that out-of-band "
+    "verification defeats a SIM swap. PaySim carries no session, device, SIM, "
+    "PIN, channel or location field, and its fraud is an account-draining "
+    "signature rather than an authentication compromise, so the band "
+    "populations describe friction cost on that process only. The supportable "
+    "claim is that the escalation ladder is DERIVED from the declared cost "
+    "ratio R, not that the escalations work."
+)
+
 
 # --- Protocol -----------------------------------------------------------------
 
@@ -330,6 +346,7 @@ FORBIDDEN_CLAIMS = [
     "train/test contamination.",
     "Any CSL delta is stable across seeds or splits. Every one rests on a "
     "single model seed and a single split seed.",
+    AUTH_DESIGN_FORBIDDEN_CLAIM,
 ]
 
 

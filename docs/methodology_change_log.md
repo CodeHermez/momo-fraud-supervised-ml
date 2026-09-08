@@ -191,3 +191,54 @@ open experiment and has not been run.
 ### Status
 
 Documented. Original retained.
+
+---
+
+## CHANGE-06 - RQ 2.1.1 was resolved as a design contribution
+
+### What changed
+
+Research question 2.1.1 - "key authentication vulnerabilities in telco mobile
+money" - is answered as a **design contribution** rather than an empirical
+result: a mapping from transaction-risk bands to step-up authentication
+requirements, explicitly distinguished from a security evaluation.
+
+`docs/authentication_design_contribution.md` records the argument.
+`baseline.AUTH_DESIGN_FORBIDDEN_CLAIM` records what may not be said about it,
+and `tests/test_baseline.py` asserts that guard is present.
+
+### Why
+
+PaySim has no authentication, session, device, SIM, PIN, channel or location
+field, so no experiment on this dataset can answer the question. This was
+already a supported conclusion in the frozen baseline. The fork left open in
+`docs/repair_report.md` section E, decision 5, was between reframing as a design
+contribution and dropping the empirical claim outright.
+
+The reframing was chosen because the material for it already exists and is
+derived rather than invented: `risk.band_cutoffs` anchors every band boundary on
+the Bayes threshold `lambda = 1/(1+R)`, and `constants.BAND_ACTIONS` already
+names the `High` band `step_up_auth`. The contribution is that **one declared
+parameter R sets both the alerting threshold and the authentication escalation
+ladder**, so an institution states its risk appetite once instead of tuning a
+detection threshold and a friction policy against each other.
+
+Manufacturing an experiment around variables the dataset does not contain was
+rejected as stretching PaySim past what it holds.
+
+### What was NOT done
+
+No experiment was run, no model fitted, no threshold reselected, and no result
+changed. The band populations quoted are those `notebooks/06_risk_analysis.ipynb`
+already produced. Nothing in the frozen baseline was unfrozen: the change adds a
+forbidden claim, which tightens the guard rather than loosening it.
+
+### Experiments affected
+
+None. The change is to how an existing artifact is framed and reported.
+
+### Status
+
+Decided and documented. `docs/repair_report.md` section E decision 5 is closed;
+the entry there is left as written, since this log is the record of what was
+decided afterwards.
