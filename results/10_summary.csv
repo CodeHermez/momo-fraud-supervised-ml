@@ -1,0 +1,5 @@
+approach,ner,pr_auc,beats_baseline
+Stack (LR meta on 4 base learners),0.12064273665893216,0.8104747251556481,True
+"XGBoost, tuned hyperparameters",0.12385685954522706,0.815250778311826,True
+"shipped baseline (XGBoost, config C)",0.1313758764525216,0.817257678698113,False
+"LightGBM, matched budget (not a fair comparison -- see section 2)",0.7905136927324302,0.04332815653835952,

@@ -1,0 +1,16 @@
+{
+  "winner_params": {
+    "max_depth": 8,
+    "learning_rate": 0.1,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "min_child_weight": 1.0,
+    "gamma": 1.0
+  },
+  "n_estimators": 126,
+  "val_pr_auc": 0.8489545077395655,
+  "test_ner": 0.12385685954522706,
+  "test_pr_auc": 0.815250778311826,
+  "baseline_ner": 0.1313758764525216,
+  "baseline_pr_auc": 0.817257678698113
+}

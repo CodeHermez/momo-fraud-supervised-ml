@@ -1,0 +1,3 @@
+learner,ner,pr_auc
+xgboost (baseline),0.1313758764525216,0.817257678698113
+stack (LR meta on 4 base learners),0.12064273665893216,0.8104747251556481
