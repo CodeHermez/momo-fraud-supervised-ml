@@ -1,0 +1,75 @@
+{
+ "experiment_id": "E6_threshold_divergence",
+ "status": "COMPLETE",
+ "frozen_baseline_sha": "b2e6f624",
+ "feature_set": "no_origin_balance",
+ "question": "Does the ROC-optimal / risk-optimal threshold equivalence hold at R = N_neg/N_pos, and how do the two rules diverge away from it?",
+ "grid_predeclared": false,
+ "grid_declaration": "No R_eval grid was ever declared for E6. The levels are declared in R_MULTIPLIERS, closed before execution, and chosen geometric and log-symmetric about the class ratio because the claim under test concerns distance from that ratio in either direction.",
+ "R_eval_grid_multipliers": [
+  0.015625,
+  0.0625,
+  0.25,
+  1.0,
+  4.0,
+  16.0,
+  64.0
+ ],
+ "R_frozen": 773.7010836478753,
+ "extra_level": {
+  "val_class_ratio": "per-cell validation N_neg/N_pos; where the theorem holds exactly"
+ },
+ "R_train_varied": false,
+ "R_eval_varied": true,
+ "configs_compared": {
+  "B": "youden",
+  "C": "ner_optimal"
+ },
+ "cells": 104,
+ "levels_per_cell": 8,
+ "rows": 1664,
+ "learners": [
+  "decision_tree",
+  "logistic_regression",
+  "random_forest",
+  "xgboost"
+ ],
+ "split_seeds": [
+  42,
+  123,
+  456,
+  789
+ ],
+ "model_seeds": [
+  42,
+  123,
+  456,
+  789
+ ],
+ "csl_variants": [
+  "unweighted",
+  "weighted"
+ ],
+ "threshold_protocol": {
+  "order": "CACHED VAL -> SELECT PER R -> LOCK -> CACHED TEST -> REPORT",
+  "selected_on": "val",
+  "reselected_per_R_level": true,
+  "config_B_r_dependent": false,
+  "config_C_r_dependent": true
+ },
+ "retraining": "none; cache-only, structurally enforced",
+ "estimator_modules_loaded": [],
+ "metric_source": "momo_fraud.risk (canonical), imported via stub package",
+ "reuses": [
+  "E3 cached val/test probability vectors",
+  "E4 designated cell set (104)"
+ ],
+ "optimization_performed": false,
+ "no_R_declared_optimal": true,
+ "execution_timestamp_utc": "2026-09-08T08:29:49+00:00",
+ "git_sha": "221fabba774841de32ead514448fbbd64358d401",
+ "git_dirty": true,
+ "python_version": "3.14.4",
+ "numpy_version": "2.4.4",
+ "pandas_version": "3.0.2"
+}

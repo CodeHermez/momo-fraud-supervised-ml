@@ -1,0 +1,83 @@
+{
+ "experiment_id": "E6_threshold_divergence",
+ "checks": [
+  {
+   "check": "THEOREM: at R = val N_neg/N_pos, B and C select one threshold",
+   "status": "PASS",
+   "detail": "104/104 cells exactly equal; max |gap| = 0.000e+00"
+  },
+  {
+   "check": "THEOREM: at that ratio the two rules give identical NER",
+   "status": "PASS",
+   "detail": "max |delta NER| = 0.000e+00"
+  },
+  {
+   "check": "at the frozen R (training ratio) the rules still agree",
+   "status": "PASS",
+   "detail": "104/104 cells exactly equal, though R_frozen / val class ratio = 1.0000417"
+  },
+  {
+   "check": "threshold gap grows with log-distance, within each direction",
+   "status": "PASS",
+   "detail": "below 0.1266 -> 0.2165 -> 0.2822; above 0.1141 -> 0.1595 -> 0.1613 (asymmetric: divergence is larger below the ratio)"
+  },
+  {
+   "check": "config C never loses to B on the split it was selected on",
+   "status": "PASS",
+   "detail": "min delta NER (val) = 0.000e+00"
+  },
+  {
+   "check": "config B's threshold is constant across R within every cell",
+   "status": "PASS",
+   "detail": "Youden never consumes a cost ratio"
+  },
+  {
+   "check": "config C's threshold moves with R in every cell",
+   "status": "PASS",
+   "detail": "min distinct thresholds per cell = 4"
+  },
+  {
+   "check": "all designated cells present at all declared levels",
+   "status": "PASS",
+   "detail": "832 paired rows = 104 cells x 8 levels"
+  },
+  {
+   "check": "canonical NER matches its closed form",
+   "status": "PASS",
+   "detail": "max |canonical - closed form| = 2.220e-16"
+  },
+  {
+   "check": "no retraining occurred (structural)",
+   "status": "PASS",
+   "detail": "no estimator module loaded; canonical risk.py imported via a stub package bypassing momo_fraud/__init__"
+  },
+  {
+   "check": "thresholds selected on validation only",
+   "status": "PASS",
+   "detail": "1 distinct value"
+  },
+  {
+   "check": "R_train never varied",
+   "status": "PASS",
+   "detail": "only R_eval moves; each cell keeps the ratio it was trained at"
+  },
+  {
+   "check": "only designated conditions present",
+   "status": "PASS",
+   "detail": "['unweighted', 'weighted']"
+  },
+  {
+   "check": "frozen baseline artifact present and unchanged",
+   "status": "PASS",
+   "detail": "frozen_experimental_baseline.json sha256[:12] = 3baef21edfa6"
+  },
+  {
+   "check": "grid declared in-script and closed before execution",
+   "status": "PASS",
+   "detail": "grid_predeclared = false; 8 levels, ['R_x0.015625', 'R_x0.0625', 'R_x0.25', 'R_x1', 'R_x16', 'R_x4', 'R_x64', 'val_class_ratio']"
+  }
+ ],
+ "passed": 15,
+ "total": 15,
+ "verdict": "PASS"
+}

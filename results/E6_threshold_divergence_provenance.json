@@ -1,0 +1,20 @@
+{
+ "experiment_id": "E6_threshold_divergence",
+ "produced_by": "scripts/experiments/E6_threshold_divergence.py",
+ "inputs": {
+  "cached_vectors": 208,
+  "cell_set_from": "results/E2_runs.csv (source == E3)",
+  "example_vector": "decision_tree__unweighted__test__seed123__no_origin_balance__s123.parquet"
+ },
+ "outputs": [
+  "results/E6_runs.csv",
+  "results/E6_paired_by_level.csv",
+  "results/E6_divergence_summary.csv",
+  "results/E6_equivalence_check.csv",
+  "results/E6_cells/*.json",
+  "results/E6_qc.json",
+  "results/E6_smoke_test.json"
+ ],
+ "git_sha": "221fabba774841de32ead514448fbbd64358d401",
+ "git_dirty": true
+}

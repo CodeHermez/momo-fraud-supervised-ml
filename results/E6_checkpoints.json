@@ -1,0 +1,525 @@
+{
+ "experiment_id": "E6_threshold_divergence",
+ "cells": [
+  {
+   "cell_id": "decision_tree__unweighted__split123__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__unweighted__split123__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__unweighted__split123__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__unweighted__split123__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__unweighted__split42__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__unweighted__split42__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__unweighted__split42__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__unweighted__split42__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__unweighted__split456__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__unweighted__split456__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__unweighted__split456__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__unweighted__split456__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__unweighted__split789__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__unweighted__split789__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__unweighted__split789__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__unweighted__split789__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__weighted__split123__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__weighted__split123__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__weighted__split123__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__weighted__split123__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__weighted__split42__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__weighted__split42__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__weighted__split42__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__weighted__split42__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__weighted__split456__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__weighted__split456__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__weighted__split456__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__weighted__split456__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__weighted__split789__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__weighted__split789__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__weighted__split789__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "decision_tree__weighted__split789__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "logistic_regression__unweighted__split123__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "logistic_regression__unweighted__split42__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "logistic_regression__unweighted__split456__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "logistic_regression__unweighted__split789__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "logistic_regression__weighted__split123__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "logistic_regression__weighted__split42__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "logistic_regression__weighted__split456__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "logistic_regression__weighted__split789__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__unweighted__split123__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__unweighted__split123__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__unweighted__split123__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__unweighted__split123__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__unweighted__split42__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__unweighted__split42__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__unweighted__split42__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__unweighted__split42__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__unweighted__split456__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__unweighted__split456__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__unweighted__split456__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__unweighted__split456__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__unweighted__split789__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__unweighted__split789__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__unweighted__split789__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__unweighted__split789__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__weighted__split123__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__weighted__split123__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__weighted__split123__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__weighted__split123__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__weighted__split42__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__weighted__split42__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__weighted__split42__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__weighted__split42__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__weighted__split456__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__weighted__split456__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__weighted__split456__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__weighted__split456__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__weighted__split789__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__weighted__split789__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__weighted__split789__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "random_forest__weighted__split789__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__unweighted__split123__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__unweighted__split123__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__unweighted__split123__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__unweighted__split123__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__unweighted__split42__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__unweighted__split42__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__unweighted__split42__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__unweighted__split42__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__unweighted__split456__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__unweighted__split456__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__unweighted__split456__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__unweighted__split456__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__unweighted__split789__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__unweighted__split789__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__unweighted__split789__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__unweighted__split789__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__weighted__split123__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__weighted__split123__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__weighted__split123__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__weighted__split123__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__weighted__split42__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__weighted__split42__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__weighted__split42__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__weighted__split42__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__weighted__split456__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__weighted__split456__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__weighted__split456__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__weighted__split456__model789",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__weighted__split789__model123",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__weighted__split789__model42",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__weighted__split789__model456",
+   "status": "complete",
+   "n_rows": 16
+  },
+  {
+   "cell_id": "xgboost__weighted__split789__model789",
+   "status": "complete",
+   "n_rows": 16
+  }
+ ]
+}

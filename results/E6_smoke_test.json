@@ -1,0 +1,52 @@
+{
+ "experiment_id": "E6_threshold_divergence",
+ "cell_id": "xgboost__weighted__split123__model456",
+ "val_class_ratio": 773.6688311688312,
+ "R_frozen": 773.7010836478753,
+ "frozen_over_val_ratio": 1.0000416877063476,
+ "checks": [
+  {
+   "check": "val and test are distinct cached vectors of equal prevalence",
+   "status": "PASS",
+   "detail": "val 954392 rows, test 954394 rows, 1232 positives each, score vectors differ"
+  },
+  {
+   "check": "validation positives match the E3 record",
+   "status": "PASS",
+   "detail": "1232 == 1232"
+  },
+  {
+   "check": "argmax(TPR-FPR) and argmin(FP+R*FN) coincide at the class ratio",
+   "status": "PASS",
+   "detail": "index 22756 == 22756"
+  },
+  {
+   "check": "the two rules return the same threshold at the class ratio",
+   "status": "PASS",
+   "detail": "0.3958902955055237 == 0.3958902955055237"
+  },
+  {
+   "check": "the two rules diverge at 64x the class ratio",
+   "status": "PASS",
+   "detail": "youden 0.395890296 vs ner_optimal 0.003012320"
+  },
+  {
+   "check": "a higher R lowers the risk-optimal threshold",
+   "status": "PASS",
+   "detail": "0.003012320 <= 0.395890296 (missing fraud costs more, so flag more)"
+  },
+  {
+   "check": "threshold is selected on val and never on test",
+   "status": "PASS",
+   "detail": "optimal_threshold and youden_threshold are called with y_val only"
+  },
+  {
+   "check": "no estimator module is loaded",
+   "status": "PASS",
+   "detail": "cache-only is structural, not asserted"
+  }
+ ],
+ "passed": 8,
+ "total": 8,
+ "verdict": "PASS"
+}
