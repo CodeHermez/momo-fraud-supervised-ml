@@ -1,0 +1,24 @@
+# The 470 MB raw CSV and its parquet cache. The prototype works from the
+# derived demo sample instead.
+data/
+
+# The 210 MB probability cache. The Dockerfile copies the single file it needs
+# by name, so this exclusion must come before that COPY to have any effect.
+predictions/*
+!predictions/xgboost__unweighted__test__seed42__no_origin_balance.parquet
+
+.venv/
+.git/
+.github/
+notebooks/
+report/
+Literature/
+Proposal/
+prototype_example/
+.agents/
+.claude/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+*.egg-info/

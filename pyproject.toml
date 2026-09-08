@@ -12,6 +12,6 @@ requires-python = ">=3.12"
 where = ["src"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
-pythonpath = ["src"]
+testpaths = ["tests", "prototype/tests"]
+pythonpath = ["src", "prototype"]
 filterwarnings = ["ignore::DeprecationWarning"]

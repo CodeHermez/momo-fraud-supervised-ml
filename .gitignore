@@ -18,9 +18,22 @@
 /skills-lock.json
 /.claude/skills/persona-researcher
 
+# The prototype's bundled test-set slice: derived from the gitignored raw CSV,
+# rebuild with `python prototype/scripts/build_demo_sample.py`.
+/prototype/data
+
 # Environment
 .venv/
 __pycache__/
 *.py[cod]
 .ipynb_checkpoints/
 .pytest_cache/
+
+# The prototype example scaffold, and the derived pickle. `artifacts/model.json`
+# is the canonical bundle that `prototype/core/scorer.py` loads; `model.joblib`
+# is regenerated with `python -m momo_fraud.predict --joblib`.
+/prototype_example
+/artifacts/model.joblib
+
+# Editable-install build metadata (`pip install -e .`).
+/src/*.egg-info/

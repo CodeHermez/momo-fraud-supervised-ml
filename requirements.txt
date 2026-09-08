@@ -5,6 +5,7 @@ pandas==3.0.2
 pyarrow==24.0.0
 scikit-learn==1.8.0
 xgboost==3.4.0
+lightgbm==4.7.0
 imbalanced-learn==0.14.2
 shap==0.52.0
 matplotlib==3.10.9
@@ -18,3 +19,7 @@ pytest==9.0.1
 # Dataset acquisition (notebook 00). Requires ~/.kaggle/kaggle.json;
 # the notebook falls back to manual download if credentials are absent.
 kaggle==1.7.4.5
+
+# The prototype only (`streamlit run prototype/app.py`). Nothing under src/ or
+# notebooks/ imports it; altair arrives with it and draws the charts.
+streamlit==1.62.0
