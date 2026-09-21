@@ -2,13 +2,13 @@
 
 Risk-based cost-sensitive fraud detection on mobile money transactions, supporting _Financial Fraud Detection in Mobile Money Networks Using Supervised Machine Learning_ (COS700).
 
-Evaluation is **unitless throughout** — a severity ratio and a 0–100 risk score, never a currency.
+Evaluation is **unitless throughout**  a severity ratio and a 0–100 risk score, never a currency.
 
 ## The question
 
-Does cost-sensitive learning actually improve fraud detection on severely imbalanced mobile money data, and _which level_ of it does the work — data, algorithm, or decision?
+Does cost-sensitive learning actually improve fraud detection on severely imbalanced mobile money data, and _which level_ of it does the work  data, algorithm, or decision?
 
-Johnson & Khoshgoftaar (2022) showed on Medicare Part B claims (8,669,497 rows, 0.0456% positive) that class weighting and undersampling **reduce** a learner's discriminative power, and that thresholding alone outperforms both. They asked for replication on other severely imbalanced datasets. PaySim, at 0.129% prevalence, is that dataset — and no prior mobile money study reports any risk analysis at all.
+Johnson & Khoshgoftaar (2022) showed on Medicare Part B claims (8,669,497 rows, 0.0456% positive) that class weighting and undersampling **reduce** a learner's discriminative power, and that thresholding alone outperforms both. They asked for replication on other severely imbalanced datasets. PaySim, at 0.129% prevalence, is that dataset  and no prior mobile money study reports any risk analysis at all.
 
 ## Findings
 
@@ -18,13 +18,13 @@ Johnson & Khoshgoftaar (2022) showed on Medicare Part B claims (8,669,497 rows, 
 type ∈ {TRANSFER, CASH_OUT}  AND  amount == oldbalanceOrg  AND  newbalanceOrig == 0
 ```
 
-Precision **0.9999**, recall **0.9770**, on all 6,362,620 transactions. Every published machine-learning result we found on this dataset scores _below_ a rule with no parameters and no training. Results on the full feature set therefore measure the simulator, not fraud detection — which is why the experiment runs on an ablated feature set (`notebooks/02`, `notebooks/03`).
+Precision **0.9999**, recall **0.9770**, on all 6,362,620 transactions. Every published machine-learning result we found on this dataset scores _below_ a rule with no parameters and no training. Results on the full feature set therefore measure the simulator, not fraud detection  which is why the experiment runs on an ablated feature set (`notebooks/02`, `notebooks/03`).
 
 This is an in-sample descriptive property of the released dataset, not a held-out detector result. The PaySim paper places fraud generation explicitly outside its scope, so there is no documented generative rule to appeal to.
 
 **Cost-sensitive _training_ does not improve ranking quality; cost-sensitive _thresholding_ reduces risk.**
 
-Across four learners and twelve paired comparisons — class weighting, per-instance severity weighting, and undersampling — **none improved PR-AUC over the unweighted baseline**. All twelve deltas were negative (−0.0159 to −0.5693), every paired bootstrap CI excluding zero at `n_boot = 2000`. Varying the split and the training seed does not change this: **116 of 116** paired comparisons are negative across 4 split seeds × 4 model seeds.
+Across four learners and twelve paired comparisons  class weighting, per-instance severity weighting, and undersampling  **none improved PR-AUC over the unweighted baseline**. All twelve deltas were negative (−0.0159 to −0.5693), every paired bootstrap CI excluding zero at `n_boot = 2000`. Varying the split and the training seed does not change this: **116 of 116** paired comparisons are negative across 4 split seeds × 4 model seeds.
 
 Moving the threshold instead removes **49–62%** of the risk (NER 0.6591 → 0.2499 for logistic regression, 0.3206 → 0.1324 for random forest).
 
@@ -32,7 +32,7 @@ Moving the threshold instead removes **49–62%** of the risk (NER 0.6591 → 0.
 
 **At `R = N_neg/N_pos`, risk-optimal and ROC-optimal thresholds are the same threshold.**
 
-Minimising `FP + R·FN` reduces to maximising `TPR − FPR` at that ratio — provably, for every model. Measured across 104 frozen model cells, the two rules select a **bit-identical** threshold in every one, maximum gap `0.000e+00`. Away from the ratio they diverge, and below it the ROC-optimal threshold can be worse than flagging nothing. This reframes the apparent "statistical versus business threshold" disagreement in the literature as a disagreement between two _cost ratios_.
+Minimising `FP + R·FN` reduces to maximising `TPR − FPR` at that ratio  provably, for every model. Measured across 104 frozen model cells, the two rules select a **bit-identical** threshold in every one, maximum gap `0.000e+00`. Away from the ratio they diverge, and below it the ROC-optimal threshold can be worse than flagging nothing. This reframes the apparent "statistical versus business threshold" disagreement in the literature as a disagreement between two _cost ratios_.
 
 **`amount` is not the most important feature.**
 
@@ -49,7 +49,7 @@ python -m venv .venv
 
 The editable install is what lets a prototype elsewhere on the machine load the model. Without it only the notebooks work, because they patch `sys.path`.
 
-Then run `notebooks/00_data_acquisition.ipynb`, which downloads `ealaxi/paysim1` (needs `~/.kaggle/kaggle.json`, or download it manually — the notebook prints instructions either way).
+Then run `notebooks/00_data_acquisition.ipynb`, which downloads `ealaxi/paysim1` (needs `~/.kaggle/kaggle.json`, or download it manually  the notebook prints instructions either way).
 
 ## Notebooks
 
@@ -71,7 +71,7 @@ Notebooks orchestrate; the analysis primitives live in `src/momo_fraud/` so metr
 
 One interpretable knob replaces every currency figure:
 
-> **R** — "missing one fraud is as bad as R false alarms."
+> **R**  "missing one fraud is as bad as R false alarms."
 
 All three cost-sensitive levels in the proposal's section 3.3 taxonomy derive from it:
 
@@ -81,9 +81,9 @@ All three cost-sensitive levels in the proposal's section 3.3 taxonomy derive fr
 | Algorithm | class weighting | `scale_pos_weight = R` |
 | Decision  | thresholding    | `λ = 1 / (1 + R)`      |
 
-For PaySim `R = N_neg/N_pos = 773.70`, which puts `λ` exactly at the class prior (0.00129) — as the theory predicts. Johnson & Khoshgoftaar use the same parameterisation, so the replication is like-for-like at the level of the cost model and not only at the level of the headline claim.
+For PaySim `R = N_neg/N_pos = 773.70`, which puts `λ` exactly at the class prior (0.00129)  as the theory predicts. Johnson & Khoshgoftaar use the same parameterisation, so the replication is like-for-like at the level of the cost model and not only at the level of the headline claim.
 
-Results are reported as **PR-AUC** (model quality), **Recall@budget** ("if analysts review _k_ transactions a day, what share of fraud is caught?"), and **Normalized Expected Risk** — the proposal's `TotalCost` divided by the do-nothing baseline, so it lands in [0,1] with 1.0 meaning "no better than ignoring the problem". Accuracy is excluded, and the exclusion is enforced in code.
+Results are reported as **PR-AUC** (model quality), **Recall@budget** ("if analysts review _k_ transactions a day, what share of fraud is caught?"), and **Normalized Expected Risk**  the proposal's `TotalCost` divided by the do-nothing baseline, so it lands in [0,1] with 1.0 meaning "no better than ignoring the problem". Accuracy is excluded, and the exclusion is enforced in code.
 
 ## Audit, repair and freeze
 
@@ -93,13 +93,13 @@ The study audited its own measurement system before drawing conclusions. Twenty 
 - rung, best-configuration and learner selection performed on **test** NER;
 - confidence-interval overlap used as a significance rule, replaced by a paired stratified bootstrap.
 
-Superseded artifacts are retained, versioned, and indexed by status; nothing was deleted. The configuration was then **frozen** — dataset checksum, feature set, splits, cost ratio, threshold protocol, metrics — and verified by nine consistency checks that read the notebooks and library rather than trusting a declaration. Unfreezing requires a change-log entry; a better score is not a reason.
+Superseded artifacts are retained, versioned, and indexed by status; nothing was deleted. The configuration was then **frozen**  dataset checksum, feature set, splits, cost ratio, threshold protocol, metrics  and verified by nine consistency checks that read the notebooks and library rather than trusting a declaration. Unfreezing requires a change-log entry; a better score is not a reason.
 
 `docs/repair_report.md`, `docs/frozen_baseline_protocol.md`, `docs/methodology_change_log.md`.
 
 ## Experiments
 
-Four experiments ran against the frozen baseline — 480 distinct model fits, reported over 792 evaluation cells once cached fits are reused. Each carries a quality-control report and an independent smoke test, and each states what it does not establish.
+Four experiments ran against the frozen baseline  480 distinct model fits, reported over 792 evaluation cells once cached fits are reused. Each carries a quality-control report and an independent smoke test, and each states what it does not establish.
 
 | | Question | Scale | Outcome |
 | --- | --- | --- | --- |
@@ -114,14 +114,14 @@ Reports in `docs/E2_report.md`, `docs/E3_report.md`, `docs/E4_report.md` and `do
 
 The dataset carries no authentication, session, device, SIM, PIN, channel or location field, so the study's authentication research question **cannot be answered empirically** and no experiment was manufactured to pretend otherwise. It is resolved instead as a design contribution: the same declared `R` that sets the alerting threshold also sets an authentication escalation ladder, because `band_cutoffs` anchors every boundary on `λ`.
 
-What is measured is the ladder's operational load — **97.04%** of transactions see no additional friction while the two escalated bands, 2.96% of traffic, carry **90.2%** of the fraud. What is **not** claimed is that any escalation works: no control was tested, and PaySim's fraud is an account-draining signature rather than an authentication compromise. That boundary is enforced in code and asserted by a test.
+What is measured is the ladder's operational load  **97.04%** of transactions see no additional friction while the two escalated bands, 2.96% of traffic, carry **90.2%** of the fraud. What is **not** claimed is that any escalation works: no control was tested, and PaySim's fraud is an account-draining signature rather than an authentication compromise. That boundary is enforced in code and asserted by a test.
 
 `docs/authentication_design_contribution.md`.
 
 ## Layout
 
 ```
-src/momo_fraud/     analysis library — metrics, splits, risk, experiment protocol, guards
+src/momo_fraud/     analysis library  metrics, splits, risk, experiment protocol, guards
 notebooks/          00–10, orchestration
 scripts/            experiments/, repairs/, freeze/, report/ (table generators)
 results/            every artifact, each with provenance and a VALID/SUPERSEDED/DIAGNOSTIC status
@@ -135,6 +135,6 @@ tests/              239 tests across the library and the prototype
 
 ## Data
 
-Not in the repository (~470 MB, gitignored). PaySim is synthetic; `02_leakage_audit` identifies which features encode the _simulator_ rather than fraud behaviour, and every headline result is produced twice — with and without them.
+Not in the repository (~470 MB, gitignored). PaySim is synthetic; `02_leakage_audit` identifies which features encode the _simulator_ rather than fraud behaviour, and every headline result is produced twice  with and without them.
 
-The supportable claim about the resulting feature set is **reduced simulator artefact exposure** — not "simulator-independent" and not "artefact-free". A test asserts that wording is not overstated.
+The supportable claim about the resulting feature set is **reduced simulator artefact exposure**  not "simulator-independent" and not "artefact-free". A test asserts that wording is not overstated.
