@@ -1,0 +1,67 @@
+---
+config:
+  look: handDrawn
+  theme: base
+  themeVariables:
+    primaryColor: '#FFFFFF'
+    secondaryColor: '#F9FAFB'
+    tertiaryColor: '#F3F4F6'
+    primaryTextColor: '#111827'
+    primaryBorderColor: '#111827'
+    lineColor: '#111827'
+    fontFamily: 'Helvetica, Arial, sans-serif'
+    fontSize: '11px'
+    subGraphTitleTotalMargin: 6
+---
+flowchart LR
+
+  %% level 1: client/switch
+
+  subgraph TIER_CLIENT ["1. Initiation & Switch Tier"]
+    direction TB
+    C1["<b>USSD / STK Interface</b><br/><small>Feature phone handsets · GSM channel</small>"]
+    C2["<b>Mobile Banking App</b><br/><small>Smartphone clients · IP channel</small>"]
+    SW["<b>Telco Gateway Switch</b><br/><small>Transaction dispatch payload</small>"]
+    C1 --> SW
+    C2 --> SW
+  end
+
+  %% level 2: static filter 
+  subgraph TIER_SERVER ["2. Traditional Processing & Rule Engine"]
+    direction TB
+    APP["<b>Application Server</b><br/><small>Session verification & business logic</small>"]
+    RULE["<b>Static Rule-Based Filter</b><br/><small>• Hard ceiling: amount &gt; R6,400,000<br/>• Static velocity / retry limit<br/>• <b>Result:</b> 1.3% Recall · Zero adaptivity</small>"]
+    DECISION{"<b>Binary Gate</b><br/><small>Pass or Block</small>"}
+    
+    APP --> RULE --> DECISION
+  end
+
+  %% TIER 3: statements and db
+ 
+  subgraph TIER_DB ["3. Settlement & Ledger Tier"]
+    direction TB
+    LEDGER["<b>Core Banking Database</b><br/><small>Account balances · Transaction history</small>"]
+    AUDIT["<b>Post-Settlement Log</b><br/><small>Batched offline compliance reports</small>"]
+    LEDGER --> AUDIT
+  end
+
+  SW --> APP
+  DECISION -- "Pass (99.8%)" --> LEDGER
+  DECISION -. "Hard Block (0.2%)" .-> SW
+
+  %% 
+  %% STYLING
+  %% 
+  classDef default fill:#FFFFFF,stroke:#111827,stroke-width:1.5px,color:#111827
+  classDef flawedNode fill:#F3F4F6,stroke:#111827,stroke-width:1.8px,color:#111827
+  classDef gate fill:#E5E7EB,stroke:#111827,stroke-width:2px,color:#111827
+
+  class C1,C2,SW,APP,LEDGER,AUDIT default
+  class RULE flawedNode
+  class DECISION gate
+
+  style TIER_CLIENT fill:#FFFFFF,stroke:#9CA3AF,stroke-width:1px,stroke-dasharray: 4 4
+  style TIER_SERVER fill:#F9FAFB,stroke:#111827,stroke-width:1.5px
+  style TIER_DB fill:#FFFFFF,stroke:#9CA3AF,stroke-width:1px,stroke-dasharray: 4 4
+
+  linkStyle default stroke:#111827,stroke-width:1.5px

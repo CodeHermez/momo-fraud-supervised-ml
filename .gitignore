@@ -45,3 +45,5 @@ report/*.pdf
 report/*.run.xml
 report/*.toc
 report/*.synctex.gz
+/review
+/docs

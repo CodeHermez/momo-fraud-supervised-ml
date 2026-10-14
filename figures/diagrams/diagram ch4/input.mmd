@@ -1,0 +1,69 @@
+---
+config:
+  look: handDrawn
+  theme: base
+  themeVariables:
+    primaryColor: '#FFFFFF'
+    secondaryColor: '#F9FAFB'
+    tertiaryColor: '#F3F4F6'
+    primaryTextColor: '#111827'
+    primaryBorderColor: '#111827'
+    lineColor: '#111827'
+    fontFamily: 'Helvetica, Arial, sans-serif'
+    fontSize: '11px'
+    subGraphTitleTotalMargin: 6
+---
+flowchart LR
+
+  subgraph COL1 ["1. Transaction Ingestion"]
+    A1["<b>Transaction Event</b><br/><small>Amount · Type · Balances</small>"]
+    A2["<b>Classifier</b><br/><small>XGBoost / Random Forest</small>"]
+    A3["<b>Risk Score p</b><br/><small>p ∈ [0, 1]</small>"]
+  end
+
+  subgraph COL2 ["2. Decision Engine"]
+    B1["<b>Bayes Threshold λ</b><br/><small>λ = 1 / (1 + R)<br/>Operating R = 774</small>"]
+  end
+
+  subgraph COL3 ["3. Risk Partitioning"]
+    C1["<b>Low Band</b><br/><small>p &lt; 0.1λ · 74.4% traffic</small>"]
+    C2["<b>Medium Band</b><br/><small>0.1λ ≤ p &lt; λ · 22.6% traffic</small>"]
+    C3["<b>High Band</b><br/><small>λ ≤ p &lt; 10λ · 2.6% traffic</small>"]
+    C4["<b>Critical Band</b><br/><small>p ≥ 10λ · 0.3% (82.8% fraud)</small>"]
+  end
+
+  subgraph COL4 ["4. Escalation Policy"]
+    D1["<b>Allow</b><br/><small>Baseline 2FA (SIM + PIN)</small>"]
+    D2["<b>Monitor</b><br/><small>Out-of-band notification</small>"]
+    D3["<b>Step-Up Challenge</b><br/><small>Handset Biometric (Inherence)</small>"]
+    D4["<b>Quarantine Hold</b><br/><small>Human Agent / Off-SIM</small>"]
+  end
+
+  A1 --> A2 --> A3 --> B1
+
+  B1 --> C1 --> D1
+  B1 --> C2 --> D2
+  B1 --> C3 --> D3
+  B1 --> C4 --> D4
+
+  classDef default fill:#FFFFFF,stroke:#111827,stroke-width:1.5px,color:#111827
+  classDef anchor fill:#F3F4F6,stroke:#111827,stroke-width:2px,color:#111827
+  classDef bandLow fill:#FFFFFF,stroke:#111827,stroke-width:1.5px,color:#111827
+  classDef bandMed fill:#F9FAFB,stroke:#111827,stroke-width:1.5px,color:#111827
+  classDef bandHigh fill:#E5E7EB,stroke:#111827,stroke-width:2px,color:#111827
+  classDef bandCrit fill:#374151,stroke:#111827,stroke-width:2.5px,color:#FFFFFF
+  classDef action fill:#F9FAFB,stroke:#111827,stroke-width:1.5px,color:#111827
+
+  class B1 anchor
+  class C1 bandLow
+  class C2 bandMed
+  class C3 bandHigh
+  class C4 bandCrit
+  class D1,D2,D3,D4 action
+
+  style COL1 fill:#FFFFFF,stroke:#9CA3AF,stroke-width:1px,stroke-dasharray: 4 4
+  style COL2 fill:#FFFFFF,stroke:#9CA3AF,stroke-width:1px,stroke-dasharray: 4 4
+  style COL3 fill:#FFFFFF,stroke:#9CA3AF,stroke-width:1px,stroke-dasharray: 4 4
+  style COL4 fill:#FFFFFF,stroke:#9CA3AF,stroke-width:1px,stroke-dasharray: 4 4
+
+  linkStyle default stroke:#111827,stroke-width:1.5px

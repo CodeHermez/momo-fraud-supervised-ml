@@ -1,0 +1,112 @@
+---
+config:
+  look: handDrawn
+  theme: base
+  themeVariables:
+    primaryColor: '#FFFFFF'
+    secondaryColor: '#F9FAFB'
+    tertiaryColor: '#F3F4F6'
+    primaryTextColor: '#111827'
+    primaryBorderColor: '#111827'
+    lineColor: '#111827'
+    fontFamily: 'Helvetica, Arial, sans-serif'
+    fontSize: '11px'
+    subGraphTitleTotalMargin: 6
+---
+flowchart TB
+
+  %% level 1 =  presenta layer
+  subgraph TIER_UI ["Tier 1: Operational Workspace & UI Layer (Streamlit)"]
+    direction LR
+    subgraph UI_SCORING ["Transaction Scoring Workspaces"]
+      direction TB
+      P1["<b>1. Single Scorer</b><br/><small>Interactive form & real test profiles</small>"]
+      P2["<b>2. Table Builder</b><br/><small>Editable multi-row sandbox grid</small>"]
+      P3["<b>3. Batch Upload</b><br/><small>CSV switch ingestion & matrix check</small>"]
+    end
+    subgraph UI_AUDIT ["Governance & Policy Workspaces"]
+      direction TB
+      P4["<b>4. Threshold & Risk</b><br/><small>Live R-slider over 954k test rows</small>"]
+      P5["<b>5. Test Set Explorer</b><br/><small>4-quadrant confusion matrix audit</small>"]
+      P6["<b>6. Experiment Gallery</b><br/><small>31 figures & 41 notebook tables</small>"]
+      P7["<b>7. Model Card</b><br/><small>Provenance, metadata & limitations</small>"]
+    end
+  end
+
+
+
+
+  %% level 2: CORE & translation layer
+  subgraph TIER_CORE ["Tier 2: Core Brokerage & Guard Layer (prototype/core/)"]
+    direction LR
+    CORE_SCHEMA["<b>schema.py Contract</b><br/><small>7 switch fields · Drops leaky origin balances</small>"]
+    CORE_SCORER["<b>scorer.py Singleton</b><br/><small>@st.cache_resource · Zero session drift</small>"]
+    CORE_EXPLAIN["<b>explain.py Engine</b><br/><small>Translates SHAP log-odds to plain English</small>"]
+    CORE_UI["<b>ui.py Renderer</b><br/><small>Verdict pills, diverging bars & alert banners</small>"]
+  end
+
+
+  subgraph TIER_ENGINE ["Tier 3: Inference & Serving Engine (src/momo_fraud/)"]
+    direction LR
+    FB["<b>FeatureBuilder</b><br/><small>transform_one() ≡ batch transform<br/>14 ablated features · Zero-skew guarantee</small>"]
+    FS["<b>FraudScorer API</b><br/><small>predict_proba() · Risk score S = 100·p</small>"]
+    XGB["<b>XGBoost Classifier</b><br/><small>300 trees · depth 6 · unweighted training</small>"]
+    SHAP["<b>TreeSHAP Explainer</b><br/><small>Local attribution: f(x) = φ₀ + Σφᵢ</small>"]
+
+    FB --> FS
+    XGB --> FS
+    FS --> SHAP
+  end
+
+
+  %% level 4: repo and data layer.
+  subgraph TIER_REGISTRY ["Tier 4: Model Registry & Cached Datasets"]
+    direction LR
+    BUNDLE["<b>JSON Artifacts Bundle (artifacts/)</b><br/><small>model.json · preprocessor.json · thresholds.json · model_card.json</small>"]
+    DATA_CACHE["<b>Evaluation Cache (predictions/ & data/)</b><br/><small>demo_sample.parquet (41k rows) · test_predictions.parquet (954k rows)</small>"]
+  end
+
+ 
+  subgraph TIER_ACTIONS ["Operational Authentication Escalation Ladder"]
+    direction LR
+    ACT_LOW["<b>Low Band (S ≤ 0.0129)</b><br/><small>97.04% traffic · Automatic Allow</small>"]
+    ACT_MED["<b>Medium Band (0.0129 &lt; S ≤ 0.129)</b><br/><small>1.57% traffic · Silent Monitoring</small>"]
+    ACT_HIGH["<b>High Band (0.129 &lt; S ≤ 1.29)</b><br/><small>1.39% traffic · Step-Up Auth Challenge</small>"]
+    ACT_CRIT["<b>Critical Band (S &gt; 1.29)</b><br/><small>High fraud density · Quarantine Block</small>"]
+  end
+
+  %% Inter-tier connections
+  TIER_UI --> TIER_CORE
+  TIER_CORE --> TIER_ENGINE
+  BUNDLE --> TIER_ENGINE
+  DATA_CACHE -.-> TIER_UI
+  TIER_ENGINE --> TIER_ACTIONS
+
+  %% STYLING 
+  classDef default fill:#FFFFFF,stroke:#111827,stroke-width:1.5px,color:#111827
+  classDef core fill:#F9FAFB,stroke:#111827,stroke-width:1.5px,color:#111827
+  classDef engine fill:#FFFFFF,stroke:#111827,stroke-width:2px,color:#111827
+  classDef registry fill:#F3F4F6,stroke:#111827,stroke-width:1.5px,stroke-dasharray: 4 4,color:#111827
+  classDef bandLow fill:#FFFFFF,stroke:#111827,stroke-width:1.5px,color:#111827
+  classDef bandMed fill:#F9FAFB,stroke:#111827,stroke-width:1.5px,color:#111827
+  classDef bandHigh fill:#E5E7EB,stroke:#111827,stroke-width:2px,color:#111827
+  classDef bandCrit fill:#374151,stroke:#111827,stroke-width:2.2px,color:#FFFFFF
+
+  class P1,P2,P3,P4,P5,P6,P7 default
+  class CORE_SCHEMA,CORE_SCORER,CORE_EXPLAIN,CORE_UI core
+  class FB,FS,XGB,SHAP engine
+  class BUNDLE,DATA_CACHE registry
+  class ACT_LOW bandLow
+  class ACT_MED bandMed
+  class ACT_HIGH bandHigh
+  class ACT_CRIT bandCrit
+
+  style TIER_UI fill:#FFFFFF,stroke:#9CA3AF,stroke-width:1px,stroke-dasharray: 4 4
+  style UI_SCORING fill:#F9FAFB,stroke:#E5E7EB,stroke-width:1px
+  style UI_AUDIT fill:#F9FAFB,stroke:#E5E7EB,stroke-width:1px
+  style TIER_CORE fill:#FFFFFF,stroke:#9CA3AF,stroke-width:1px,stroke-dasharray: 4 4
+  style TIER_ENGINE fill:#F9FAFB,stroke:#111827,stroke-width:1.8px
+  style TIER_REGISTRY fill:#FFFFFF,stroke:#9CA3AF,stroke-width:1px,stroke-dasharray: 4 4
+  style TIER_ACTIONS fill:#FFFFFF,stroke:#9CA3AF,stroke-width:1.2px
+
+  linkStyle default stroke:#111827,stroke-width:1.5px

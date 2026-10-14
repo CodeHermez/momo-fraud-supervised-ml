@@ -1,0 +1,73 @@
+---
+config:
+  look: handDrawn
+  theme: base
+  themeVariables:
+    primaryColor: '#FFFFFF'
+    secondaryColor: '#F9FAFB'
+    tertiaryColor: '#F3F4F6'
+    primaryTextColor: '#111827'
+    primaryBorderColor: '#111827'
+    lineColor: '#111827'
+    fontFamily: 'Helvetica, Arial, sans-serif'
+    fontSize: '11px'
+    subGraphTitleTotalMargin: 6
+---
+flowchart TB
+ 
+  ROOT["<b>Raw Training Distribution</b><br/><small>Natural Imbalance 1 : 774 · N = 6,362,620</small>"]
+
+  %% 
+  %% THREE COMPARATIVE TIERS
+  %% 
+  subgraph TIER1 ["Tier 1: Data Level"]
+    direction TB
+    A1["<b>Under-Sampling (RUS)</b><br/><small>Majority subset N'- = N- / R</small>"]
+    A2["<b>Default Threshold</b><br/><small>Cutoff fixed at t = 0.5</small>"]
+    A3["<b>Ranking Degraded</b><br/><small>ΔPR-AUC &lt; 0 across all splits</small>"]
+    A1 --> A2 --> A3
+  end
+
+  subgraph TIER2 ["Tier 2: Algorithm Level"]
+    direction TB
+    B1["<b>Loss Weighting</b><br/><small>scale_pos_weight = R = 774</small>"]
+    B2["<b>Default Threshold</b><br/><small>Cutoff fixed at t = 0.5</small>"]
+    B3["<b>Calibration Broken</b><br/><small>Inflated probabilities · High false alarms</small>"]
+    B1 --> B2 --> B3
+  end
+
+  subgraph TIER3 ["Tier 3: Decision Level (Optimal)"]
+    direction TB
+    C1["<b>Unweighted Model</b><br/><small>Natural distribution preserved</small>"]
+    C2["<b>Post-Hoc Cutoff</b><br/><small>Tuned on validation to λ = 1/(1+R)</small>"]
+    C3["<b>49%–62% Risk Removed</b><br/><small>Optimal PR-AUC · Minimum NER</small>"]
+    C1 --> C2 --> C3
+  end
+
+  ROOT --> A1
+  ROOT --> B1
+  ROOT --> C1
+
+  %% THEOREM EQUIVALENCE SUMMARY ANCHOR
+  EQUIV["<b>Theorem 4.1 Equivalence:</b> At R = N- / N+, Risk-Optimal ≡ ROC-Optimal (Youden J = TPR - FPR)<br/><small>Validated bit-identical across 104 frozen model cells (0.000 threshold gap)</small>"]
+
+  C3 -.-> EQUIV
+
+
+  classDef default fill:#FFFFFF,stroke:#111827,stroke-width:1.5px,color:#111827
+  classDef degraded fill:#F3F4F6,stroke:#111827,stroke-width:1.5px,color:#111827
+  classDef optimal fill:#E5E7EB,stroke:#111827,stroke-width:2.2px,color:#111827
+  classDef root fill:#FFFFFF,stroke:#111827,stroke-width:2px,color:#111827
+  classDef callout fill:#F9FAFB,stroke:#111827,stroke-width:1.8px,stroke-dasharray: 4 4,color:#111827
+
+  class ROOT root
+  class A1,A2,B1,B2,C1,C2 default
+  class A3,B3 degraded
+  class C3 optimal
+  class EQUIV callout
+
+  style TIER1 fill:#FFFFFF,stroke:#9CA3AF,stroke-width:1px,stroke-dasharray: 4 4
+  style TIER2 fill:#FFFFFF,stroke:#9CA3AF,stroke-width:1px,stroke-dasharray: 4 4
+  style TIER3 fill:#F9FAFB,stroke:#111827,stroke-width:1.8px
+
+  linkStyle default stroke:#111827,stroke-width:1.5px

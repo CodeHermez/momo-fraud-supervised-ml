@@ -1,0 +1,55 @@
+---
+config:
+  look: handDrawn
+  theme: base
+  themeVariables:
+    primaryColor: '#FFFFFF'
+    secondaryColor: '#F9FAFB'
+    tertiaryColor: '#F3F4F6'
+    primaryTextColor: '#111827'
+    primaryBorderColor: '#111827'
+    lineColor: '#111827'
+    fontFamily: 'Helvetica, Arial, sans-serif'
+    fontSize: '10px'
+    subGraphTitleTotalMargin: 4
+---
+flowchart LR
+
+  subgraph PANEL_A ["Panel A: PaySim Generator Bookkeeping Leak"]
+    direction TB
+    CL1["<b>1. Risky Type</b><br/><small>type ∈ {TRANSFER, CASH_OUT}</small>"]
+    CL2["<b>2. Exact Drain</b><br/><small>amount == oldbalanceOrg</small>"]
+    CL3["<b>3. Zero Remainder</b><br/><small>newbalanceOrig == 0</small>"]
+    
+    TARGET["<b>Deterministic Label</b><br/><small>• 8,025 of 8,213 frauds<br/>• Precision: 0.9999 · Recall: 0.9770<br/>• Zero parameters / No ML</small>"]
+
+    CL1 --> TARGET
+    CL2 --> TARGET
+    CL3 --> TARGET
+  end
+
+
+  subgraph PANEL_B ["Panel B: The Feature Ablation Ladder"]
+    direction TB
+    RUNG1["<b>Rung 1: Full Set (20 feat.)</b><br/><small>Raw balances + errors · NER = 0.0041</small>"]
+    RUNG2["<b>Rung 2: No Errors (18 feat.)</b><br/><small>Drop error diffs · NER = 0.0094</small>"]
+    RUNG3["<b>Rung 3: No Origin (14 feat.) [SELECTED]</b><br/><small>Drop origin balances · NER = 0.1314 (Floor ≥ 0.05)</small>"]
+    RUNG4["<b>Rung 4: Trans. Only (9 feat.) [REJECTED]</b><br/><small>Drop dest. balances · NER = 0.1931</small>"]
+
+    RUNG1 --> RUNG2 --> RUNG3 --> RUNG4
+  end
+
+  PANEL_A -. "Ablation restores\nheadroom" .-> PANEL_B
+
+  classDef default fill:#FFFFFF,stroke:#111827,stroke-width:1.4px,color:#111827
+  classDef leakTarget fill:#E5E7EB,stroke:#111827,stroke-width:2px,color:#111827
+  classDef selectedRung fill:#F3F4F6,stroke:#111827,stroke-width:2.2px,color:#111827
+  classDef rejectedRung fill:#FFFFFF,stroke:#9CA3AF,stroke-width:1px,stroke-dasharray: 3 3,color:#6B7280
+
+  class CL1,CL2,CL3,RUNG1,RUNG2 default
+  class TARGET leakTarget
+  class RUNG3 selectedRung
+  class RUNG4 rejectedRung
+
+  style PANEL_A fill:#FFFFFF,stroke:#9CA3AF,stroke-width:1px,stroke-dasharray: 4 4
+  style PANEL_B fill:#FFFFFF,stroke:#9CA3AF,stroke-width:1px,stroke-dasharray: 4 4
