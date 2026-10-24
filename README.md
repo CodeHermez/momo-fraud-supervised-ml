@@ -299,16 +299,25 @@ E3  ──fits 220 models, caches predictions/*__s{split}.parquet──┐
       └─> E6  reads E2_runs.csv + cached val/test vectors (no fitting)
 ```
 
-**The runners resume from committed cells.** E2 and E3 write one JSON per completed cell into `results/E2_cells/` and `results/E3_cells/` and skip any cell already there. Those folders are committed, so on a clone `--run` reports every cell "already complete", fits nothing, and never builds the `predictions/` cache that E4 and E6 read. To genuinely refit, move the committed cells aside first:
+> **Move the committed cells aside before you run anything in this level.**
+>
+> E2 and E3 write one JSON per completed cell into `results/E2_cells/` and `results/E3_cells/`, and skip any cell already there. Those folders are committed, so on a clone `--run` prints `E3 matrix: 220 planned, 220 already complete, 0 to run`, fits nothing, and never builds the `predictions/` cache that E4 and E6 read. Moving them aside (rather than deleting them) gives the runners an empty folder to fill and keeps the committed cells on disk to compare against afterwards:
+>
+> ```bash
+> # macOS / Linux / Git Bash
+> mv results/E3_cells results/E3_cells.committed
+> mv results/E2_cells results/E2_cells.committed
+> ```
+>
+> ```powershell
+> # PowerShell
+> Rename-Item results\E3_cells E3_cells.committed
+> Rename-Item results\E2_cells E2_cells.committed
+> ```
+>
+> Nothing reads the `*.committed` folders except the comparison script below. E6 needs no such step: it recomputes every cell on each `--run`.
 
-```bash
-mv results/E3_cells results/E3_cells.committed
-mv results/E2_cells results/E2_cells.committed
-```
-
-(PowerShell: `Rename-Item results\E3_cells E3_cells.committed`, likewise for E2.)
-
-Then:
+Then, in this order:
 
 ```bash
 # E3 — multi-seed x multi-split robustness: 4 learners x 4 variants x 4 split seeds x 4 model seeds
@@ -331,20 +340,32 @@ python scripts/experiments/E6_threshold_divergence.py --run --aggregate --qc
 python scripts/experiments/E6_figure.py
 ```
 
-E3 and E2 are the expensive ones — 480 model fits on ~4.45 M training rows, including random forests and XGBoost — so expect hours, not minutes. Both are resumable: interrupt them and re-run `--run`, and only unfinished cells are fitted. A crashed cell leaves no file.
+E3 and E2 are the expensive ones — 480 model fits on ~4.45 M training rows, including random forests and XGBoost — so expect hours, not minutes. Both are resumable: interrupt them and re-run `--run`, and only unfinished cells are fitted. A crashed cell leaves no file. The smoke cell is kept as a completed cell, so `--run` after `--smoke` fits one fewer.
 
-E4 and E6 accept `--output-root DIR` to write somewhere other than `results/`, which is the cleanest way to compare a re-run against the committed numbers:
-
-```bash
-python scripts/experiments/E6_threshold_divergence.py --run --aggregate --qc --output-root ../e6_rerun
-python scripts/experiments/E4_prevalence_manipulation.py --run --aggregate --qc --output-root ../e4_rerun
-```
+**Only aggregate a finished matrix.** `--aggregate` summarises whatever cells are in the folder and does not warn if some are missing. Before aggregating, re-run `--run` once more and check it prints `220 planned, 220 already complete, 0 to run` for E3 (`260 … 260 … 0` for E2).
 
 Each experiment's `--qc` writes `results/E*_qc.json` with a PASS/FAIL verdict, and checks among other things that the frozen baseline artifacts were not modified.
 
 ### Comparing your run with the committed results
 
-Because every result is committed, `git` is the comparison tool. After any level:
+`git diff` alone is misleading here. Every re-run cell records its own timestamp, commit SHA and fit time, so a diff marks every cell as changed even when no number moved. `scripts/experiments/compare_with_committed.py` compares everything *except* those fields, and exits non-zero if any value differs:
+
+```bash
+# the refitted cells, against the copies moved aside above
+python scripts/experiments/compare_with_committed.py E3 E2
+
+# E6's cells, against git HEAD (there is no moved-aside copy)
+python scripts/experiments/compare_with_committed.py E6
+
+# the aggregated tables, each against its committed version in git HEAD
+python scripts/experiments/compare_with_committed.py \
+    --csv results/E3_runs.csv --csv results/E2_runs.csv \
+    --csv results/E4_runs.csv.gz --csv results/E6_paired_by_level.csv
+```
+
+A reproduced cell reads `1 identical, 0 differ`; a differing one is listed with the column and the largest absolute gap. It can be run part-way through a re-run: cells not yet refitted are simply not compared.
+
+For the notebook and repair outputs of Level 3, which carry no per-run fields, `git` is enough:
 
 ```bash
 git status
@@ -354,11 +375,31 @@ git diff -- results/04_h1_verdict_v2.csv        # inspect one file
 
 What should and should not move:
 
-- **Should match:** CSV result tables, verdicts and QC outcomes, when run on the canonical CSV with the pinned packages. Seeds are fixed (`42` for the frozen baseline; split seeds and model seeds `42, 123, 456, 789` in E2/E3).
-- **Will differ:** `*_provenance.json`, `recorded_utc` and `git` fields (they record *your* run), PDF metadata, and wall-clock timing columns.
-- **If a number differs:** compare your `pip freeze` against `results/experiment_environment.json` first, then the dataset checksum, then the platform. Multithreaded tree learners can differ in the last decimal places across CPUs and operating systems.
+- **Should match exactly:** every metric, threshold and confusion count, and the cached probability vectors themselves. Run on the canonical CSV with the pinned packages, the E3 smoke cell (`xgboost / rus / split 123 / model 456`) and the E2 smoke cell (`random_forest / R_train 50 / split 456 / model 789`) both reproduce their committed cells exactly, with bit-identical validation and test scores. Seeds are fixed: `42` for the frozen baseline, and split and model seeds `42, 123, 456, 789` in E2/E3.
+- **Will differ:** `fit_seconds`, `cell_seconds`, `git_sha`, `git_dirty`, `timestamp_utc` and the `*_provenance.json` files (they record *your* run), plus PDF metadata.
+- **If a number differs:** compare your `pip freeze` against `results/experiment_environment.json` first, then the dataset checksum, then the platform. The committed results come from one Windows 11 machine, and multithreaded tree learners can differ in the last decimal places on another CPU or operating system.
 
-When finished comparing, `git checkout -- results figures artifacts` restores the committed record, and `mv results/E3_cells.committed results/E3_cells` (likewise E2) restores the committed cells.
+**Putting the committed record back.** The re-run has created new `results/E2_cells/` and `results/E3_cells/` folders, so delete those before moving the originals back. Otherwise `mv` nests the old folder inside the new one:
+
+```bash
+# macOS / Linux / Git Bash
+rm -rf results/E3_cells results/E2_cells
+mv results/E3_cells.committed results/E3_cells
+mv results/E2_cells.committed results/E2_cells
+git checkout -- results figures artifacts
+git status                                       # should be clean
+```
+
+```powershell
+# PowerShell
+Remove-Item -Recurse -Force results\E3_cells, results\E2_cells
+Rename-Item results\E3_cells.committed E3_cells
+Rename-Item results\E2_cells.committed E2_cells
+git checkout -- results figures artifacts
+git status
+```
+
+`predictions/` and `data/` are gitignored and stay where they are; delete them if you want the disk space back.
 
 ### Troubleshooting
 
@@ -368,6 +409,8 @@ When finished comparing, `git checkout -- results figures artifacts` restores th
 | `FileNotFoundError: PaySim CSV not found at …/data/raw/…` | the dataset is not in place; see [Step 2](#step-2--get-the-dataset) |
 | notebook 00 stops on a checksum mismatch | the file is not the canonical Kaggle release; re-download it |
 | `--run` says every cell is already complete and fits nothing | the committed cells are present; move them aside ([Level 4](#level-4--re-run-the-experiments-e3-e2-e4-e6)) |
+| `git diff` shows every cell JSON changed | expected: each cell records its own timestamp and SHA; use `compare_with_committed.py` instead |
+| after restoring, `results/E3_cells/E3_cells.committed/` exists | the new folder was not deleted before `mv`; delete `results/E3_cells` and move the inner folder back up |
 | E4 / E6 report skipped cells "no cached predictions" | `predictions/` was never built; run E3 (and notebooks 03–05) first |
 | `FileNotFoundError: report/tables/E6_divergence.tex` | create the folder: `mkdir -p report/tables`, or run `build_auth_tables.py` first |
 | Prototype page 4 or 5 shows a "missing file" note | build the prediction file and demo sample ([Level 2](#level-2--run-the-prototype)) |
