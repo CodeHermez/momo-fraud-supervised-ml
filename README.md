@@ -55,10 +55,8 @@ The committed results were produced on Windows 11. All commands below are given 
 
 ### Step 1 — Clone and install
 
-> **Clone the `experiment-suite` branch.** At the time of writing the default branch (`main`) on GitHub holds only this README's predecessor, the licence and `.gitignore`; all code, notebooks and results are on `experiment-suite`.
-
 ```bash
-git clone -b experiment-suite https://github.com/CodeHermez/momo-fraud-supervised-ml.git
+git clone https://github.com/CodeHermez/momo-fraud-supervised-ml.git
 cd momo-fraud-supervised-ml
 ```
 
